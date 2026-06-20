@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Etienne — Home</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --text: #1f2433;
+      --muted: #5b6478;
+      --accent: #5b6cff;
+      --accent-dark: #4351e0;
+      --line: #e6e9f2;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+      transition: background 0.4s ease;
+    }
+
+    .card {
+      background: var(--card);
+      max-width: 560px;
+      width: 100%;
+      padding: 48px 48px 44px;
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(31, 36, 51, 0.12);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 3.75rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .wave { display: inline-block; }
+
+    p.welcome {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      background: var(--bg);
+      padding: 6px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+    }
+
+    .tab {
+      flex: 1;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .tab:hover { color: var(--text); }
+
+    .tab.active {
+      background: var(--card);
+      color: var(--accent);
+      box-shadow: 0 4px 12px rgba(31, 36, 51, 0.08);
+    }
+
+    /* Panels */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .panel h2 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .panel p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    button.action {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      padding: 16px 32px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 20px rgba(91, 108, 255, 0.35);
+    }
+
+    button.action:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(91, 108, 255, 0.45);
+    }
+
+    button.action:active { transform: translateY(0); }
+
+    /* Find tab search box */
+    .search-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .search-row input {
+      flex: 1;
+      font-size: 1rem;
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .search-row input:focus { border-color: var(--accent); }
+
+    .hint {
+      font-size: 0.95rem;
+      color: var(--muted);
+      min-height: 1.4em;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Hi, I'm Etienne <span class="wave">👋</span></h1>
+    <p class="welcome">Welcome to my little corner of the web. Glad you stopped by — make yourself at home and have a look around.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="help" role="tab">Help</button>
+      <button class="tab" data-tab="find" role="tab">Find</button>
+    </div>
+
+    <!-- Tab 1: Help -->
+    <section class="panel active" id="help" role="tabpanel">
+      <h2>Need a hand?</h2>
+      <p>Feeling stuck or just want a bit of fun? Tap the button below and I'll paint the page a fresh new colour.</p>
+      <button class="action" id="colourBtn" type="button">Surprise me with a colour</button>
+    </section>
+
+    <!-- Tab 2: Find -->
+    <section class="panel" id="find" role="tabpanel">
+      <h2>Find something</h2>
+      <p>Type anything you're looking for and hit Search.</p>
+      <div class="search-row">
+        <input id="searchInput" type="text" placeholder="Search for something..." />
+        <button class="action" id="searchBtn" type="button">Search</button>
+      </div>
+      <div class="hint" id="searchHint"></div>
+    </section>
+  </main>
+
+  <script>
+    // Tab switching
+    const tabs = document.querySelectorAll(".tab");
+    const panels = document.querySelectorAll(".panel");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.tab;
+        tabs.forEach(t => t.classList.toggle("active", t === tab));
+        panels.forEach(p => p.classList.toggle("active", p.id === target));
+      });
+    });
+
+    // Help tab: random background colour
+    document.getElementById("colourBtn").addEventListener("click", () => {
+      const hue = Math.floor(Math.random() * 360);
+      document.body.style.background = `hsl(${hue}, 70%, 88%)`;
+    });
+
+    // Find tab: simple search feedback
+    const input = document.getElementById("searchInput");
+    const hint = document.getElementById("searchHint");
+    function doSearch() {
+      const q = input.value.trim();
+      hint.textContent = q
+        ? `You searched for “${q}”. (This is a demo — wire it up to whatever you like!)`
+        : "Type something first, then hit Search.";
+    }
+    document.getElementById("searchBtn").addEventListener("click", doSearch);
+    input.addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
+  </script>
+</body>
+</html>
