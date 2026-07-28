@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Submit a Book Report | AFM PCD</title>
+<style>
+  :root {
+    --bg: #f2f6f5;
+    --card: #ffffff;
+    --text: #1f2b2a;
+    --muted: #5c6b6a;
+    --accent: #2f7d6b;
+    --accent-dark: #256254;
+    --line: #dde6e4;
+    --danger: #c0392b;
+    --star: #d8dedd;
+    --star-on: #e0a527;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px 16px 80px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .intro {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 36px 40px;
+    box-shadow: 0 12px 34px rgba(31,43,42,0.08);
+    margin-bottom: 24px;
+  }
+  h1 { font-size: 2rem; margin-bottom: 14px; letter-spacing: -0.01em; }
+  h2 { font-size: 1.25rem; margin-bottom: 10px; }
+  p { line-height: 1.6; color: var(--muted); margin-bottom: 12px; }
+  .intro p:last-child { margin-bottom: 0; }
+  .rules {
+    background: #eef7f4;
+    border: 1px solid #cfe6de;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin: 18px 0;
+  }
+  .rules p { color: var(--text); margin-bottom: 6px; }
+  .rules p:last-child { margin-bottom: 0; }
+  details {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-top: 16px;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--accent-dark);
+  }
+  details ul, details ol { margin: 10px 0 6px 22px; color: var(--muted); line-height: 1.6; }
+  details p { margin-top: 8px; }
+
+  .card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 36px 40px 32px;
+    box-shadow: 0 12px 34px rgba(31,43,42,0.08);
+  }
+
+  .progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 28px;
+  }
+  .progress .step {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--line);
+    transition: background 0.25s ease;
+  }
+  .progress .step.done { background: var(--accent); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page h2 { color: var(--accent-dark); }
+  .page .sub { margin-bottom: 22px; font-size: 0.95rem; }
+
+  .field { margin-bottom: 20px; }
+  label { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 6px; }
+  label .req { color: var(--danger); margin-left: 2px; }
+  input[type="text"], input[type="email"], input[type="tel"], input[type="date"],
+  input[type="number"], input[type="file"] {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s ease;
+  }
+  input:focus { border-color: var(--accent); }
+  .hint-text { font-size: 0.82rem; color: var(--muted); margin-top: 5px; }
+  .error-text { font-size: 0.82rem; color: var(--danger); margin-top: 5px; display: none; }
+  .field.invalid input { border-color: var(--danger); }
+  .field.invalid .error-text { display: block; }
+
+  .stars { display: flex; gap: 6px; }
+  .stars button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--star);
+    padding: 0;
+    transition: color 0.15s ease, transform 0.1s ease;
+  }
+  .stars button:hover { transform: scale(1.1); }
+  .stars button.on { color: var(--star-on); }
+
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  @media (max-width: 520px) { .checks { grid-template-columns: 1fr; } }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .check-item input { width: 17px; height: 17px; }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    gap: 12px;
+  }
+  button.btn {
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    padding: 13px 26px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+  }
+  button.primary {
+    color: #fff;
+    background: var(--accent);
+    box-shadow: 0 8px 20px rgba(47,125,107,0.3);
+    margin-left: auto;
+  }
+  button.primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  button.secondary {
+    color: var(--accent-dark);
+    background: #eef7f4;
+  }
+  button.secondary:hover { background: #dfeee9; }
+  button.secondary:disabled { opacity: 0; pointer-events: none; }
+
+  .summary {
+    background: #f8faf9;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+  }
+  .summary dt { font-weight: 600; color: var(--muted); margin-top: 8px; }
+  .summary dt:first-child { margin-top: 0; }
+  .summary dd { color: var(--text); }
+
+  .notice {
+    background: #fff7e6;
+    border: 1px solid #f0dca6;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    color: #6b4e11;
+    margin-bottom: 20px;
+  }
+
+  .done-panel { text-align: center; }
+  .done-panel .big-check {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+  .fallback-box {
+    text-align: left;
+    background: #f8faf9;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-top: 18px;
+  }
+  .fallback-box textarea {
+    width: 100%;
+    height: 160px;
+    margin-top: 10px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.82rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="intro">
+    <h1>Submit a Book Report</h1>
+    <p>Reading sharpens vocabulary, focus, memory and empathy — it helps you grow personally and serve more effectively in ministry. Never stop reading!</p>
+    <div class="rules">
+      <p><strong>Maximum 2 book reports per year</strong> — 10 credits per report.</p>
+      <p><strong>Deadline:</strong> book reports must be submitted by 20 November each year.</p>
+      <p>Pastors who, for reasons of economics or travel distance, find it difficult to attend enough training events may submit more than 2 reports per year. This must first be arranged with the National PCD office and your Regional PCD coordinator.</p>
+    </div>
+    <details>
+      <summary>How to do a book report</summary>
+      <p>The written report should be two (2) A4 pages long, and should <strong>not</strong> be a summary of the book.</p>
+      <p><strong>Page 1 — cover page</strong>, including:</p>
+      <ul>
+        <li>Your name, cell number and email address</li>
+        <li>The name of your region &amp; assembly</li>
+        <li>Your Regional PCD coordinator's name, cell number and email address</li>
+        <li>Date of the report, book title, year of publication and author</li>
+      </ul>
+      <p><strong>Page 2 — your reflection</strong>, discussing:</p>
+      <ul>
+        <li>The book's impact on your life and ministry</li>
+        <li>Your critical reflection on the book</li>
+        <li>What challenged you personally</li>
+        <li>What you plan to do about it</li>
+      </ul>
+      <p>Please use the Book Review Template available on the PCD website. Submit reports as soon as they're done — don't wait until year-end.</p>
+    </details>
+  </div>
+
+  <form class="card" id="reportForm" novalidate>
+
+    <div class="progress">
+      <div class="step done" data-step="1"></div>
+      <div class="step" data-step="2"></div>
+      <div class="step" data-step="3"></div>
+      <div class="step" data-step="4"></div>
+    </div>
+
+    <!-- PAGE 1: Personal details -->
+    <section class="page active" data-page="1">
+      <h2>Your Personal Details</h2>
+      <p class="sub">Make sure that all the details are correct.</p>
+
+      <div class="field" data-field="name">
+        <label>Your Name &amp; Surname<span class="req">*</span></label>
+        <input type="text" name="name" required />
+        <p class="error-text">Please enter your name and surname.</p>
+      </div>
+
+      <div class="field" data-field="idNumber">
+        <label>Your ID Number<span class="req">*</span></label>
+        <input type="text" name="idNumber" inputmode="numeric" required />
+        <p class="hint-text">13-digit South African ID number.</p>
+        <p class="error-text">Please enter a valid 13-digit ID number.</p>
+      </div>
+
+      <div class="field" data-field="email">
+        <label>Your Email Address<span class="req">*</span></label>
+        <input type="email" name="email" required />
+        <p class="error-text">Please enter a valid email address.</p>
+      </div>
+
+      <div class="field" data-field="cell">
+        <label>Your Cell Number<span class="req">*</span></label>
+        <input type="tel" name="cell" required />
+        <p class="error-text">Please enter a valid cell number.</p>
+      </div>
+
+      <div class="field" data-field="ordinationDate">
+        <label>Your Ordination Date<span class="req">*</span></label>
+        <input type="date" name="ordinationDate" required />
+        <p class="error-text">Please select your ordination date.</p>
+      </div>
+
+      <div class="field" data-field="region">
+        <label>Your AFM Geographical Region<span class="req">*</span></label>
+        <input type="text" name="region" required />
+        <p class="error-text">Please enter your region.</p>
+      </div>
+
+      <div class="field" data-field="assembly">
+        <label>Your Assembly Name<span class="req">*</span></label>
+        <input type="text" name="assembly" required />
+        <p class="error-text">Please enter your assembly name.</p>
+      </div>
+    </section>
+
+    <!-- PAGE 2: Coordinator details -->
+    <section class="page" data-page="2">
+      <h2>Details of the AFM Regional PCD Coordinator</h2>
+      <p class="sub">Please make sure that these details are correct.</p>
+
+      <div class="field" data-field="coordName">
+        <label>The Name of your Regional PCD Coordinator<span class="req">*</span></label>
+        <input type="text" name="coordName" required />
+        <p class="error-text">Please enter your coordinator's name.</p>
+      </div>
+
+      <div class="field" data-field="coordEmail">
+        <label>The Email Address of the Coordinator<span class="req">*</span></label>
+        <input type="email" name="coordEmail" required />
+        <p class="error-text">Please enter a valid email address.</p>
+      </div>
+
+      <div class="field" data-field="coordCell">
+        <label>The Cell Number of your Coordinator<span class="req">*</span></label>
+        <input type="tel" name="coordCell" required />
+        <p class="error-text">Please enter a valid cell number.</p>
+      </div>
+    </section>
+
+    <!-- PAGE 3: Book info -->
+    <section class="page" data-page="3">
+      <h2>Information about the Book</h2>
+      <p class="sub">Make sure that this information is correct.</p>
+
+      <div class="field" data-field="submitDate">
+        <label>Date of the Book Submission<span class="req">*</span></label>
+        <input type="date" name="submitDate" required />
+        <p class="error-text">Please select a date.</p>
+      </div>
+
+      <div class="field" data-field="title">
+        <label>The Title of the Book<span class="req">*</span></label>
+        <input type="text" name="title" required />
+        <p class="error-text">Please enter the book title.</p>
+      </div>
+
+      <div class="field" data-field="rating">
+        <label>How do you rate the book?<span class="req">*</span></label>
+        <div class="stars" id="stars">
+          <button type="button" data-val="1">★</button>
+          <button type="button" data-val="2">★</button>
+          <button type="button" data-val="3">★</button>
+          <button type="button" data-val="4">★</button>
+          <button type="button" data-val="5">★</button>
+        </div>
+        <input type="hidden" name="rating" />
+        <p class="error-text">Please select a rating.</p>
+      </div>
+
+      <div class="field" data-field="year">
+        <label>Year of Publication<span class="req">*</span></label>
+        <input type="number" name="year" min="1500" max="2100" required />
+        <p class="error-text">Please enter a valid year.</p>
+      </div>
+
+      <div class="field" data-field="author">
+        <label>Name of the Author<span class="req">*</span></label>
+        <input type="text" name="author" required />
+        <p class="error-text">Please enter the author's name.</p>
+      </div>
+
+      <div class="field" data-field="competency">
+        <label>Competency Area<span class="req">*</span> <span style="font-weight:400; color:var(--muted);">(select all that apply)</span></label>
+        <div class="checks">
+          <label class="check-item"><input type="checkbox" name="competency" value="Technology" /> Technology</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Spiritual Leadership" /> Spiritual Leadership</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Management & Administration" /> Management &amp; Administration</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Practical & Liturgical Skills" /> Practical &amp; Liturgical Skills</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Personal Development" /> Personal Development</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Evangelism & Missions" /> Evangelism &amp; Missions</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Theological Foundation" /> Theological Foundation</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Interpersonal & relational Skills" /> Interpersonal &amp; relational Skills</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Community & Social Skills" /> Community &amp; Social Skills</label>
+          <label class="check-item"><input type="checkbox" name="competency" value="Pastoral Care" /> Pastoral Care</label>
+        </div>
+        <p class="error-text">Please select at least one competency area.</p>
+      </div>
+    </section>
+
+    <!-- PAGE 4: Attachment + review -->
+    <section class="page" data-page="4">
+      <h2>Your Written Report &amp; Review</h2>
+      <p class="sub">Attach your 2-page book report document, then review your answers before sending.</p>
+
+      <div class="field" data-field="file">
+        <label>Book Report Document (Word or PDF)<span class="req">*</span></label>
+        <input type="file" name="file" accept=".doc,.docx,.pdf" required />
+        <p class="hint-text">Your two-page cover page + reflection, following the template.</p>
+        <p class="error-text">Please choose your book report file.</p>
+      </div>
+
+      <div class="notice">
+        Email attachments can't be added automatically by a web page for security reasons.
+        When you press <strong>Submit</strong>, your email app will open with everything else
+        filled in — just attach the file you chose above before hitting send.
+      </div>
+
+      <dl class="summary" id="summaryBox"></dl>
+    </section>
+
+    <div class="nav-row">
+      <button type="button" class="btn secondary" id="backBtn" disabled>Back</button>
+      <button type="button" class="btn primary" id="nextBtn">Next</button>
+      <button type="submit" class="btn primary" id="submitBtn" style="display:none;">Submit</button>
+    </div>
+  </form>
+
+  <div class="card done-panel" id="donePanel" style="display:none; margin-top:24px;">
+    <div class="big-check">✅</div>
+    <h2>Your email app should now be open</h2>
+    <p>A new email addressed to <strong>irma@afmpcd.co.za</strong> has been pre-filled with your report details. Please attach your book report document, double check everything, and hit send.</p>
+    <div class="fallback-box">
+      <strong>Email app didn't open, or the message looks cut off?</strong>
+      <p style="margin-top:6px;">Copy the text below and paste it into a new email to <strong>irma@afmpcd.co.za</strong> yourself.</p>
+      <textarea id="fallbackText" readonly></textarea>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const TO_EMAIL = "irma@afmpcd.co.za";
+  const form = document.getElementById("reportForm");
+  const pages = Array.from(document.querySelectorAll(".page"));
+  const steps = Array.from(document.querySelectorAll(".progress .step"));
+  const backBtn = document.getElementById("backBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const submitBtn = document.getElementById("submitBtn");
+  let current = 1;
+
+  const fieldValidators = {
+    name: () => form.name.value.trim().length > 0,
+    idNumber: () => /^\d{13}$/.test(form.idNumber.value.trim()),
+    email: () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.value.trim()),
+    cell: () => /^\d{9,10}$/.test(form.cell.value.replace(/[\s-]/g, "")),
+    ordinationDate: () => form.ordinationDate.value.trim().length > 0,
+    region: () => form.region.value.trim().length > 0,
+    assembly: () => form.assembly.value.trim().length > 0,
+    coordName: () => form.coordName.value.trim().length > 0,
+    coordEmail: () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.coordEmail.value.trim()),
+    coordCell: () => /^\d{9,10}$/.test(form.coordCell.value.replace(/[\s-]/g, "")),
+    submitDate: () => form.submitDate.value.trim().length > 0,
+    title: () => form.title.value.trim().length > 0,
+    rating: () => form.rating.value.trim().length > 0,
+    year: () => /^\d{4}$/.test(form.year.value.trim()),
+    author: () => form.author.value.trim().length > 0,
+    competency: () => Array.from(form.querySelectorAll('input[name="competency"]:checked')).length > 0,
+    file: () => form.file.files.length > 0,
+  };
+
+  function validatePage(pageNum) {
+    const page = pages[pageNum - 1];
+    let allValid = true;
+    page.querySelectorAll(".field[data-field]").forEach(fieldEl => {
+      const key = fieldEl.dataset.field;
+      const valid = fieldValidators[key] ? fieldValidators[key]() : true;
+      fieldEl.classList.toggle("invalid", !valid);
+      if (!valid) allValid = false;
+    });
+    return allValid;
+  }
+
+  function showPage(n) {
+    pages.forEach(p => p.classList.toggle("active", Number(p.dataset.page) === n));
+    steps.forEach(s => s.classList.toggle("done", Number(s.dataset.step) <= n));
+    backBtn.disabled = n === 1;
+    nextBtn.style.display = n === pages.length ? "none" : "inline-block";
+    submitBtn.style.display = n === pages.length ? "inline-block" : "none";
+    if (n === pages.length) buildSummary();
+    current = n;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    if (!validatePage(current)) return;
+    if (current < pages.length) showPage(current + 1);
+  });
+
+  backBtn.addEventListener("click", () => {
+    if (current > 1) showPage(current - 1);
+  });
+
+  // Star rating
+  const starButtons = Array.from(document.querySelectorAll("#stars button"));
+  starButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const val = Number(btn.dataset.val);
+      form.rating.value = val;
+      starButtons.forEach(b => b.classList.toggle("on", Number(b.dataset.val) <= val));
+      btn.closest(".field").classList.remove("invalid");
+    });
+  });
+
+  function buildSummary() {
+    const competencies = Array.from(form.querySelectorAll('input[name="competency"]:checked')).map(c => c.value).join(", ") || "—";
+    const fileName = form.file.files.length ? form.file.files[0].name : "—";
+    const rows = [
+      ["Name & Surname", form.name.value],
+      ["ID Number", form.idNumber.value],
+      ["Email", form.email.value],
+      ["Cell Number", form.cell.value],
+      ["Ordination Date", form.ordinationDate.value],
+      ["Region", form.region.value],
+      ["Assembly", form.assembly.value],
+      ["Coordinator Name", form.coordName.value],
+      ["Coordinator Email", form.coordEmail.value],
+      ["Coordinator Cell", form.coordCell.value],
+      ["Date of Submission", form.submitDate.value],
+      ["Book Title", form.title.value],
+      ["Rating", (form.rating.value || "—") + " / 5"],
+      ["Year of Publication", form.year.value],
+      ["Author", form.author.value],
+      ["Competency Area(s)", competencies],
+      ["Attached File", fileName],
+    ];
+    const box = document.getElementById("summaryBox");
+    box.innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v || "—"}</dd>`).join("");
+  }
+
+  function buildEmailBody() {
+    const competencies = Array.from(form.querySelectorAll('input[name="competency"]:checked')).map(c => c.value).join(", ") || "—";
+    const fileName = form.file.files.length ? form.file.files[0].name : "(no file selected)";
+    return [
+      "PERSONAL DETAILS",
+      `Name & Surname: ${form.name.value}`,
+      `ID Number: ${form.idNumber.value}`,
+      `Email Address: ${form.email.value}`,
+      `Cell Number: ${form.cell.value}`,
+      `Ordination Date: ${form.ordinationDate.value}`,
+      `AFM Geographical Region: ${form.region.value}`,
+      `Assembly Name: ${form.assembly.value}`,
+      "",
+      "REGIONAL PCD COORDINATOR",
+      `Name: ${form.coordName.value}`,
+      `Email: ${form.coordEmail.value}`,
+      `Cell Number: ${form.coordCell.value}`,
+      "",
+      "BOOK INFORMATION",
+      `Date of Submission: ${form.submitDate.value}`,
+      `Book Title: ${form.title.value}`,
+      `Rating: ${form.rating.value || "—"} / 5`,
+      `Year of Publication: ${form.year.value}`,
+      `Author: ${form.author.value}`,
+      `Competency Area(s): ${competencies}`,
+      "",
+      `Attachment: please remember to manually attach "${fileName}" to this email before sending.`,
+    ].join("\n");
+  }
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!validatePage(current)) return;
+
+    const subject = `Book Report Submission - ${form.name.value} - ${form.title.value}`;
+    const body = buildEmailBody();
+    const mailtoUrl = `mailto:${TO_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailtoUrl;
+
+    document.getElementById("fallbackText").value = `To: ${TO_EMAIL}\nSubject: ${subject}\n\n${body}`;
+    form.style.display = "none";
+    document.getElementById("donePanel").style.display = "block";
+  });
+
+  showPage(1);
+</script>
+</body>
+</html>
