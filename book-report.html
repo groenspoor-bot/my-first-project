@@ -432,9 +432,9 @@
       </div>
 
       <div class="notice">
-        Email attachments can't be added automatically by a web page for security reasons.
-        If you chose a file above, your email app will open when you press <strong>Submit</strong> —
-        just remember to manually attach it before hitting send.
+        When you press <strong>Submit</strong>, your report is sent automatically to <strong>irma@afmpcd.co.za</strong> — no email app required.
+        Note: our email service can't carry file attachments on its free plan, so if you selected a document above,
+        please also email it separately to irma@afmpcd.co.za, mentioning your name and the book title.
       </div>
 
       <dl class="summary" id="summaryBox"></dl>
@@ -448,20 +448,27 @@
   </form>
 
   <div class="card done-panel" id="donePanel" style="display:none; margin-top:24px;">
-    <div class="big-check">✅</div>
-    <h2>Your email app should now be open</h2>
-    <p>A new email addressed to <strong>irma@afmpcd.co.za</strong> has been pre-filled with your report details. If you chose a document to attach, remember to add it manually, then double check everything and hit send.</p>
-    <div class="fallback-box">
-      <strong>Email app didn't open, or the message looks cut off?</strong>
-      <p style="margin-top:6px;">Copy the text below and paste it into a new email to <strong>irma@afmpcd.co.za</strong> yourself.</p>
+    <div class="big-check" id="doneIcon">✅</div>
+    <h2 id="doneTitle">Your report has been sent</h2>
+    <p id="doneText">Your book report was emailed to <strong>irma@afmpcd.co.za</strong>. Thank you!</p>
+    <div class="fallback-box" id="fallbackBox" style="display:none;">
+      <strong>Want to send it yourself instead?</strong>
+      <p style="margin-top:6px;">Click below to open your own email app pre-filled, or copy the text and paste it into a new email to <strong>irma@afmpcd.co.za</strong>.</p>
+      <p style="margin-top:10px;"><a id="mailtoFallback" href="#" class="btn secondary" style="text-decoration:none; display:inline-block;">Open in my email app</a></p>
       <textarea id="fallbackText" readonly></textarea>
+      <p style="margin-top:12px;"><button type="button" class="btn secondary" id="retryBtn">Try again</button></p>
     </div>
   </div>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   const TO_EMAIL = "irma@afmpcd.co.za";
+  const EMAILJS_PUBLIC_KEY = "7aqkFQNeU8dnvfRaE";
+  const EMAILJS_SERVICE_ID = "service_e4jpqeg";
+  const EMAILJS_TEMPLATE_ID = "template_43lsn25";
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
   const form = document.getElementById("reportForm");
   const pages = Array.from(document.querySelectorAll(".page"));
   const steps = Array.from(document.querySelectorAll(".progress .step"));
@@ -618,19 +625,93 @@
     return lines.join("\n");
   }
 
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    if (!validatePage(current)) return;
+  function buildTemplateParams() {
+    const competencies = Array.from(form.querySelectorAll('input[name="competency"]:checked')).map(c => c.value).join(", ") || "—";
+    const hasFile = form.file.files.length > 0;
+    const fileNote = hasFile
+      ? `The pastor selected a document named "${form.file.files[0].name}" but our email service can't attach files automatically — please follow up with them directly to get it.`
+      : "No document was attached.";
+    return {
+      name: form.name.value,
+      id_number: form.idNumber.value,
+      email: form.email.value,
+      cell: form.cell.value,
+      ordination_date: form.ordinationDate.value,
+      region: form.region.value,
+      assembly: form.assembly.value,
+      coord_name: form.coordName.value,
+      coord_email: form.coordEmail.value,
+      coord_cell: form.coordCell.value,
+      submit_date: form.submitDate.value,
+      book_title: form.title.value,
+      rating: form.rating.value || "—",
+      year: form.year.value,
+      author: form.author.value,
+      competency: competencies,
+      reflection_impact: form.reflectionImpact.value,
+      reflection_critical: form.reflectionCritical.value,
+      reflection_challenge: form.reflectionChallenge.value,
+      reflection_plan: form.reflectionPlan.value,
+      file_note: fileNote,
+    };
+  }
 
+  const donePanel = document.getElementById("donePanel");
+  const doneIcon = document.getElementById("doneIcon");
+  const doneTitle = document.getElementById("doneTitle");
+  const doneText = document.getElementById("doneText");
+  const fallbackBox = document.getElementById("fallbackBox");
+  const mailtoFallback = document.getElementById("mailtoFallback");
+  const retryBtn = document.getElementById("retryBtn");
+
+  function showSuccess() {
+    doneIcon.textContent = "✅";
+    doneTitle.textContent = "Your report has been sent";
+    doneText.innerHTML = `Your book report was emailed to <strong>${TO_EMAIL}</strong>. Thank you!`;
+    fallbackBox.style.display = "none";
+    form.style.display = "none";
+    donePanel.style.display = "block";
+  }
+
+  function showFailure() {
     const subject = `Book Report Submission - ${form.name.value} - ${form.title.value}`;
     const body = buildEmailBody();
     const mailtoUrl = `mailto:${TO_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    window.location.href = mailtoUrl;
-
+    doneIcon.textContent = "⚠️";
+    doneTitle.textContent = "Something went wrong sending your report";
+    doneText.innerHTML = `We couldn't reach the email service just now. Your answers are safe below — try again, or send it yourself using the options below.`;
+    mailtoFallback.href = mailtoUrl;
     document.getElementById("fallbackText").value = `To: ${TO_EMAIL}\nSubject: ${subject}\n\n${body}`;
+    fallbackBox.style.display = "block";
     form.style.display = "none";
-    document.getElementById("donePanel").style.display = "block";
+    donePanel.style.display = "block";
+  }
+
+  retryBtn.addEventListener("click", () => {
+    donePanel.style.display = "none";
+    form.style.display = "block";
+  });
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!validatePage(current)) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending…";
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, buildTemplateParams())
+      .then(() => {
+        showSuccess();
+      })
+      .catch(err => {
+        console.error("EmailJS send failed:", err);
+        showFailure();
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit";
+      });
   });
 
   showPage(1);
