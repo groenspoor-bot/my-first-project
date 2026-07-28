@@ -91,7 +91,7 @@
   label { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 6px; }
   label .req { color: var(--danger); margin-left: 2px; }
   input[type="text"], input[type="email"], input[type="tel"], input[type="date"],
-  input[type="number"], input[type="file"] {
+  input[type="number"], input[type="file"], textarea {
     width: 100%;
     font-size: 1rem;
     padding: 12px 14px;
@@ -101,7 +101,13 @@
     background: #fff;
     transition: border-color 0.2s ease;
   }
-  input:focus { border-color: var(--accent); }
+  textarea {
+    font-family: inherit;
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.5;
+  }
+  input:focus, textarea:focus { border-color: var(--accent); }
   .hint-text { font-size: 0.82rem; color: var(--muted); margin-top: 5px; }
   .error-text { font-size: 0.82rem; color: var(--danger); margin-top: 5px; display: none; }
   .field.invalid input { border-color: var(--danger); }
@@ -248,6 +254,7 @@
       <div class="step" data-step="2"></div>
       <div class="step" data-step="3"></div>
       <div class="step" data-step="4"></div>
+      <div class="step" data-step="5"></div>
     </div>
 
     <!-- PAGE 1: Personal details -->
@@ -383,22 +390,51 @@
       </div>
     </section>
 
-    <!-- PAGE 4: Attachment + review -->
+    <!-- PAGE 4: Reflection -->
     <section class="page" data-page="4">
-      <h2>Your Written Report &amp; Review</h2>
-      <p class="sub">Attach your 2-page book report document, then review your answers before sending.</p>
+      <h2>Your Reflection on the Book</h2>
+      <p class="sub">This should not be a summary of the book — share your own reflection in your own words.</p>
+
+      <div class="field" data-field="reflectionImpact">
+        <label>The book's impact on your life and ministry<span class="req">*</span></label>
+        <textarea name="reflectionImpact" required></textarea>
+        <p class="error-text">Please share the book's impact on your life and ministry.</p>
+      </div>
+
+      <div class="field" data-field="reflectionCritical">
+        <label>Your critical reflection on the book<span class="req">*</span></label>
+        <textarea name="reflectionCritical" required></textarea>
+        <p class="error-text">Please share your critical reflection on the book.</p>
+      </div>
+
+      <div class="field" data-field="reflectionChallenge">
+        <label>What challenged you personally<span class="req">*</span></label>
+        <textarea name="reflectionChallenge" required></textarea>
+        <p class="error-text">Please share what challenged you personally.</p>
+      </div>
+
+      <div class="field" data-field="reflectionPlan">
+        <label>What you plan to do about it<span class="req">*</span></label>
+        <textarea name="reflectionPlan" required></textarea>
+        <p class="error-text">Please share what you plan to do about it.</p>
+      </div>
+    </section>
+
+    <!-- PAGE 5: Attachment + review -->
+    <section class="page" data-page="5">
+      <h2>Attachment &amp; Review</h2>
+      <p class="sub">Optionally attach your written report document, then review your answers before sending.</p>
 
       <div class="field" data-field="file">
-        <label>Book Report Document (Word or PDF)<span class="req">*</span></label>
-        <input type="file" name="file" accept=".doc,.docx,.pdf" required />
-        <p class="hint-text">Your two-page cover page + reflection, following the template.</p>
-        <p class="error-text">Please choose your book report file.</p>
+        <label>Book Report Document (Word or PDF) <span style="font-weight:400; color:var(--muted);">(optional)</span></label>
+        <input type="file" name="file" accept=".doc,.docx,.pdf" />
+        <p class="hint-text">If you have a separate cover-page document following the template, you may attach it here — or just rely on the reflection answers above.</p>
       </div>
 
       <div class="notice">
         Email attachments can't be added automatically by a web page for security reasons.
-        When you press <strong>Submit</strong>, your email app will open with everything else
-        filled in — just attach the file you chose above before hitting send.
+        If you chose a file above, your email app will open when you press <strong>Submit</strong> —
+        just remember to manually attach it before hitting send.
       </div>
 
       <dl class="summary" id="summaryBox"></dl>
@@ -414,7 +450,7 @@
   <div class="card done-panel" id="donePanel" style="display:none; margin-top:24px;">
     <div class="big-check">✅</div>
     <h2>Your email app should now be open</h2>
-    <p>A new email addressed to <strong>irma@afmpcd.co.za</strong> has been pre-filled with your report details. Please attach your book report document, double check everything, and hit send.</p>
+    <p>A new email addressed to <strong>irma@afmpcd.co.za</strong> has been pre-filled with your report details. If you chose a document to attach, remember to add it manually, then double check everything and hit send.</p>
     <div class="fallback-box">
       <strong>Email app didn't open, or the message looks cut off?</strong>
       <p style="margin-top:6px;">Copy the text below and paste it into a new email to <strong>irma@afmpcd.co.za</strong> yourself.</p>
@@ -451,7 +487,10 @@
     year: () => /^\d{4}$/.test(form.year.value.trim()),
     author: () => form.author.value.trim().length > 0,
     competency: () => Array.from(form.querySelectorAll('input[name="competency"]:checked')).length > 0,
-    file: () => form.file.files.length > 0,
+    reflectionImpact: () => form.reflectionImpact.value.trim().length > 0,
+    reflectionCritical: () => form.reflectionCritical.value.trim().length > 0,
+    reflectionChallenge: () => form.reflectionChallenge.value.trim().length > 0,
+    reflectionPlan: () => form.reflectionPlan.value.trim().length > 0,
   };
 
   function validatePage(pageNum) {
@@ -496,9 +535,15 @@
     });
   });
 
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
   function buildSummary() {
     const competencies = Array.from(form.querySelectorAll('input[name="competency"]:checked')).map(c => c.value).join(", ") || "—";
-    const fileName = form.file.files.length ? form.file.files[0].name : "—";
+    const fileName = form.file.files.length ? form.file.files[0].name : "Not attached";
     const rows = [
       ["Name & Surname", form.name.value],
       ["ID Number", form.idNumber.value],
@@ -516,16 +561,21 @@
       ["Year of Publication", form.year.value],
       ["Author", form.author.value],
       ["Competency Area(s)", competencies],
+      ["Impact on life & ministry", form.reflectionImpact.value],
+      ["Critical reflection", form.reflectionCritical.value],
+      ["What challenged you", form.reflectionChallenge.value],
+      ["What you plan to do", form.reflectionPlan.value],
       ["Attached File", fileName],
     ];
     const box = document.getElementById("summaryBox");
-    box.innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v || "—"}</dd>`).join("");
+    box.innerHTML = rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v || "—")}</dd>`).join("");
   }
 
   function buildEmailBody() {
     const competencies = Array.from(form.querySelectorAll('input[name="competency"]:checked')).map(c => c.value).join(", ") || "—";
-    const fileName = form.file.files.length ? form.file.files[0].name : "(no file selected)";
-    return [
+    const hasFile = form.file.files.length > 0;
+    const fileName = hasFile ? form.file.files[0].name : null;
+    const lines = [
       "PERSONAL DETAILS",
       `Name & Surname: ${form.name.value}`,
       `ID Number: ${form.idNumber.value}`,
@@ -548,8 +598,24 @@
       `Author: ${form.author.value}`,
       `Competency Area(s): ${competencies}`,
       "",
-      `Attachment: please remember to manually attach "${fileName}" to this email before sending.`,
-    ].join("\n");
+      "YOUR REFLECTION",
+      "The book's impact on your life and ministry:",
+      form.reflectionImpact.value,
+      "",
+      "Your critical reflection on the book:",
+      form.reflectionCritical.value,
+      "",
+      "What challenged you personally:",
+      form.reflectionChallenge.value,
+      "",
+      "What you plan to do about it:",
+      form.reflectionPlan.value,
+      "",
+    ];
+    if (hasFile) {
+      lines.push(`Attachment: please remember to manually attach "${fileName}" to this email before sending.`);
+    }
+    return lines.join("\n");
   }
 
   form.addEventListener("submit", e => {
