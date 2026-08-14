@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube One-Click EndNote Exporter",
+  "version": "1.0.0",
+  "description": "Adds an Export to EndNote button under every YouTube video that downloads a fully-tagged .enw reference (EndNote Online Multimedia type) for that video.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.youtube.com/watch*",
+        "*://www.youtube.com/shorts/*",
+        "*://m.youtube.com/watch*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

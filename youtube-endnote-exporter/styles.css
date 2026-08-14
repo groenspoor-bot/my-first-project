@@ -1,0 +1,59 @@
+/* YouTube One-Click EndNote Exporter */
+
+.enw-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  margin: 4px 8px 4px 0;
+  border: none;
+  border-radius: 18px;
+  background: var(--yt-spec-badge-chip-background, #f2f2f2);
+  color: var(--yt-spec-text-primary, #0f0f0f);
+  font-family: "Roboto", "Arial", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.enw-export-btn:hover {
+  background: var(--yt-spec-10-percent-layer, #e5e5e5);
+}
+
+.enw-export-btn:active {
+  transform: scale(0.97);
+}
+
+.enw-export-btn.enw-fallback {
+  margin: 8px 0 12px 0;
+}
+
+.enw-export-btn__icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.enw-export-btn.enw-success {
+  background: #d5f5e3;
+  color: #1e7e34;
+}
+
+.enw-export-btn.enw-error {
+  background: #fbe0e0;
+  color: #c0392b;
+}
+
+@media (prefers-color-scheme: dark) {
+  .enw-export-btn {
+    background: var(--yt-spec-badge-chip-background, #272727);
+    color: var(--yt-spec-text-primary, #f1f1f1);
+  }
+  .enw-export-btn:hover {
+    background: var(--yt-spec-10-percent-layer, #3f3f3f);
+  }
+}
