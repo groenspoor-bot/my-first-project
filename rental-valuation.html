@@ -166,18 +166,10 @@
   button.secondary:hover { background: #e1eaf8; }
   button.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-  .email-box {
-    margin-top: 16px;
-    display: none;
-  }
-  .email-box.open { display: block; }
-  .email-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .email-row input { flex: 1; min-width: 200px; }
-
   /* Print styles */
   @media print {
     body { background: #fff; padding: 0; }
-    .intro .print-hide, .tabs, .action-row, .email-box { display: none !important; }
+    .intro .print-hide, .tabs, .action-row { display: none !important; }
     .card { box-shadow: none; border: 1px solid #ccc; padding: 20px; margin-bottom: 16px; }
     .panel { display: block !important; }
     .panel + .panel { margin-top: 14px; }
@@ -244,15 +236,6 @@
 
     <div class="action-row print-hide">
       <button class="btn primary" id="printBtn" type="button" disabled>🖨️ Print Valuation</button>
-      <button class="btn secondary" id="emailBtn" type="button" disabled>✉️ Email Valuation</button>
-    </div>
-
-    <div class="email-box print-hide" id="emailBox">
-      <p class="hint-text" style="margin-bottom:10px;">This opens your own email app with the valuation pre-filled — nothing is sent automatically.</p>
-      <div class="email-row">
-        <input type="email" id="emailTo" placeholder="Recipient email address (optional)" />
-        <button class="btn primary" id="emailSendBtn" type="button">Open in Email App</button>
-      </div>
     </div>
   </div>
 
@@ -321,10 +304,6 @@
   const conditionDesc = document.getElementById("conditionDesc");
   const summaryBox = document.getElementById("summaryBox");
   const printBtn = document.getElementById("printBtn");
-  const emailBtn = document.getElementById("emailBtn");
-  const emailBox = document.getElementById("emailBox");
-  const emailTo = document.getElementById("emailTo");
-  const emailSendBtn = document.getElementById("emailSendBtn");
 
   let lastResult = null;
 
@@ -386,8 +365,6 @@
     summaryBox.innerHTML = html;
 
     printBtn.disabled = !ready;
-    emailBtn.disabled = !ready;
-    if (!ready) emailBox.classList.remove("open");
   }
 
   [propertyRefEl, unitSqmEl, valuationDateEl, conditionSelect].forEach(el => {
@@ -398,31 +375,6 @@
   printBtn.addEventListener("click", () => {
     if (!lastResult) return;
     window.print();
-  });
-
-  emailBtn.addEventListener("click", () => {
-    emailBox.classList.toggle("open");
-  });
-
-  emailSendBtn.addEventListener("click", () => {
-    if (!lastResult) return;
-    const r = lastResult;
-    const subject = `Rental Valuation - ${r.propertyRef || "Untitled"}`;
-    const bodyLines = [
-      "RENTAL VALUATION",
-      "",
-      `Property Reference: ${r.propertyRef || "—"}`,
-      `Unit m²: ${r.sqm.toLocaleString("en-US")} m²`,
-      `Date of Valuation: ${r.valuationDate || "—"}`,
-      `Rental Rate Used: ${fmtCurrency(r.rate)}/m²`,
-      `Condition Assessment: ${r.condition.label} (${r.condition.pct}%)`,
-      "",
-      `Estimated Base Monthly Rental: ${fmtCurrency(r.baseRental)}`,
-      `Estimated Current Monthly Rental: ${fmtCurrency(r.currentRental)}`,
-    ];
-    const to = emailTo.value.trim();
-    const mailtoUrl = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
-    window.location.href = mailtoUrl;
   });
 
   // Default valuation date to today
