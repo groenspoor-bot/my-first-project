@@ -242,7 +242,9 @@
 </div>
 
 <script>
-  const BASE_RATE = 150.00; // R per m² per month
+  const BASE_RATE = 130.00; // R per m² per month
+  const CESSIONARY_PCT = 80; // % of Estimated Current Monthly Rental
+  const TRUST_PCT = 20;      // % of Estimated Current Monthly Rental
 
   const CONDITIONS = [
     { id: "brand_new",  label: "Brand New / Pristine",     desc: "Never used or recently completed; zero defects or wear.",                          pct: 100 },
@@ -340,15 +342,20 @@
 
     let baseRental = null;
     let currentRental = null;
+    let cessionaryAmount = null;
+    let trustAmount = null;
     if (ready) {
       baseRental = sqm * rate;
       currentRental = baseRental * (condition.pct / 100);
+      cessionaryAmount = currentRental * (CESSIONARY_PCT / 100);
+      trustAmount = currentRental * (TRUST_PCT / 100);
     }
 
     lastResult = ready ? {
       propertyRef, sqm, valuationDate, condition,
       rate,
       baseRental, currentRental,
+      cessionaryAmount, trustAmount,
     } : null;
 
     // Summary
@@ -362,6 +369,8 @@
     let html = rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join("");
     html += `<div class="subline"><dt>Estimated Base Monthly Rental</dt><dd>${ready ? fmtCurrency(baseRental) : "—"}</dd></div>`;
     html += `<div class="headline"><dt>Estimated Current Monthly Rental</dt><dd>${ready ? fmtCurrency(currentRental) : "—"}</dd></div>`;
+    html += `<div class="subline"><dt>Cessionary (${CESSIONARY_PCT}%)</dt><dd>${ready ? fmtCurrency(cessionaryAmount) : "—"}</dd></div>`;
+    html += `<div class="subline"><dt>Trust (${TRUST_PCT}%)</dt><dd>${ready ? fmtCurrency(trustAmount) : "—"}</dd></div>`;
     summaryBox.innerHTML = html;
 
     printBtn.disabled = !ready;
