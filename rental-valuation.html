@@ -220,12 +220,13 @@
 
   <div class="intro">
     <h1>Rental Valuation Tool</h1>
-    <p class="print-hide">Enter the unit's size and choose the condition assessment, and the tool calculates the Estimated Base Monthly Rental and Estimated Current Monthly Rental automatically. The rental rate escalates 7% year-on-year from 1 January 2027, based on the Date of Valuation.</p>
+    <p class="print-hide">Enter the unit's size and choose the construction material and condition assessment, and the tool calculates the Estimated Base Monthly Rental and Estimated Current Monthly Rental automatically. The rental rate escalates 7% year-on-year from 1 January 2027, based on the Date of Valuation.</p>
   </div>
 
   <div class="card">
     <div class="tabs print-hide" role="tablist">
       <button class="tab active" data-tab="details" type="button">Details</button>
+      <button class="tab" data-tab="material" type="button">Construction Material</button>
       <button class="tab" data-tab="condition" type="button">Condition Assessment</button>
     </div>
 
@@ -250,6 +251,20 @@
         <input type="date" id="valuationDate" />
         <p class="hint-text">Used to escalate the rental rate (7% per year from 1 January 2027).</p>
         <div class="rate-chip" id="rateChip" style="display:none;"></div>
+      </div>
+    </section>
+
+    <!-- Construction Material -->
+    <section class="panel" id="material">
+      <h2>Construction Material</h2>
+      <p class="sub">Select the unit's primary construction material.</p>
+
+      <div class="field" data-field="material">
+        <label>Construction Material</label>
+        <select id="materialSelect">
+          <option value="">Select a construction material…</option>
+        </select>
+        <p class="error-text">Please select a construction material.</p>
       </div>
     </section>
 
@@ -288,6 +303,13 @@
   const CESSIONARY_PCT = 80; // % of Estimated Current Monthly Rental
   const TRUST_PCT = 20;      // % of Estimated Current Monthly Rental
 
+  const MATERIALS = [
+    { id: "brick",           label: "Brick",           pct: 100 },
+    { id: "nutec",           label: "Nutec",           pct: 80  },
+    { id: "timber",          label: "Timber",          pct: 70  },
+    { id: "metal_sheeting",  label: "Metal Sheeting",  pct: 60  },
+  ];
+
   const CONDITIONS = [
     { id: "brand_new",  label: "Brand New / Pristine",     desc: "Never used or recently completed; zero defects or wear.",                          pct: 100 },
     { id: "excellent",  label: "Excellent",                desc: "Near new; minimal, barely noticeable aesthetic wear; fully functional.",             pct: 90  },
@@ -305,7 +327,15 @@
   const ESCALATION_BASE_YEAR = ESCALATION_START_YEAR - 1; // 2026
   const ESCALATION_RATE = 0.07;
 
-  // Populate dropdown
+  // Populate dropdowns
+  const materialSelect = document.getElementById("materialSelect");
+  MATERIALS.forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m.id;
+    opt.textContent = `${m.label} (${m.pct}%)`;
+    materialSelect.appendChild(opt);
+  });
+
   const conditionSelect = document.getElementById("conditionSelect");
   CONDITIONS.forEach(c => {
     const opt = document.createElement("option");
@@ -362,6 +392,7 @@
     const propertyRef = propertyRefEl.value.trim();
     const sqm = parseFloat(unitSqmEl.value);
     const valuationDate = valuationDateEl.value;
+    const material = MATERIALS.find(m => m.id === materialSelect.value);
     const condition = CONDITIONS.find(c => c.id === conditionSelect.value);
 
     // Rental rate chip
@@ -381,7 +412,7 @@
     }
 
     const validSqm = !isNaN(sqm) && sqm > 0;
-    const ready = validSqm && condition;
+    const ready = validSqm && material && condition;
 
     let baseRental = null;
     let currentRental = null;
@@ -389,13 +420,13 @@
     let trustAmount = null;
     if (ready) {
       baseRental = sqm * rate;
-      currentRental = baseRental * (condition.pct / 100);
+      currentRental = baseRental * (material.pct / 100) * (condition.pct / 100);
       cessionaryAmount = currentRental * (CESSIONARY_PCT / 100);
       trustAmount = currentRental * (TRUST_PCT / 100);
     }
 
     lastResult = ready ? {
-      propertyRef, sqm, valuationDate, condition,
+      propertyRef, sqm, valuationDate, material, condition,
       rate,
       baseRental, currentRental,
       cessionaryAmount, trustAmount,
@@ -407,6 +438,7 @@
       ["Unit m²", validSqm ? `${sqm.toLocaleString("en-US")} m²` : "—"],
       ["Date of Valuation", valuationDate || "—"],
       ["Rental Rate", `${fmtCurrency(rate)}/m²`],
+      ["Construction Material", material ? `${material.label} (${material.pct}%)` : "—"],
       ["Condition Assessment", condition ? `${condition.label} (${condition.pct}%)` : "—"],
     ];
     let html = rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join("");
@@ -421,7 +453,7 @@
     printBtn.disabled = !ready;
   }
 
-  [propertyRefEl, unitSqmEl, valuationDateEl, conditionSelect].forEach(el => {
+  [propertyRefEl, unitSqmEl, valuationDateEl, materialSelect, conditionSelect].forEach(el => {
     el.addEventListener("input", recalculate);
     el.addEventListener("change", recalculate);
   });
