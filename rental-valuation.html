@@ -139,6 +139,44 @@
   }
   .summary .subline dd { font-size: 1rem; font-weight: 600; }
 
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 20px;
+  }
+  .result-grid .summary { flex: 1; min-width: 0; }
+
+  .split-panel {
+    background: var(--result-bg);
+    border: 1px solid var(--result-line);
+    border-left: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    min-width: 160px;
+    text-align: right;
+  }
+  .split-panel .split-item + .split-item { margin-top: 14px; }
+  .split-panel dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+  }
+  .split-panel dd {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent-dark);
+    margin-top: 2px;
+  }
+
+  @media (max-width: 560px) {
+    .result-grid { grid-template-columns: 1fr; }
+    .split-panel { text-align: left; border-left: 1px solid var(--result-line); border-top: 3px solid var(--accent); }
+  }
+
   .action-row {
     display: flex;
     gap: 12px;
@@ -173,6 +211,7 @@
     .card { box-shadow: none; border: 1px solid #ccc; padding: 20px; margin-bottom: 16px; }
     .panel { display: block !important; }
     .panel + .panel { margin-top: 14px; }
+    .split-panel { border: 1px solid #ccc; }
   }
 </style>
 </head>
@@ -232,7 +271,10 @@
 
   <div class="card results">
     <h2>Valuation Result</h2>
-    <dl class="summary" id="summaryBox"></dl>
+    <div class="result-grid">
+      <dl class="summary" id="summaryBox"></dl>
+      <dl class="split-panel" id="splitPanel"></dl>
+    </div>
 
     <div class="action-row print-hide">
       <button class="btn primary" id="printBtn" type="button" disabled>🖨️ Print Valuation</button>
@@ -305,6 +347,7 @@
   const rateChip = document.getElementById("rateChip");
   const conditionDesc = document.getElementById("conditionDesc");
   const summaryBox = document.getElementById("summaryBox");
+  const splitPanel = document.getElementById("splitPanel");
   const printBtn = document.getElementById("printBtn");
 
   let lastResult = null;
@@ -369,9 +412,11 @@
     let html = rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join("");
     html += `<div class="subline"><dt>Estimated Base Monthly Rental</dt><dd>${ready ? fmtCurrency(baseRental) : "—"}</dd></div>`;
     html += `<div class="headline"><dt>Estimated Current Monthly Rental</dt><dd>${ready ? fmtCurrency(currentRental) : "—"}</dd></div>`;
-    html += `<div class="subline"><dt>Cessionary (${CESSIONARY_PCT}%)</dt><dd>${ready ? fmtCurrency(cessionaryAmount) : "—"}</dd></div>`;
-    html += `<div class="subline"><dt>Trust (${TRUST_PCT}%)</dt><dd>${ready ? fmtCurrency(trustAmount) : "—"}</dd></div>`;
     summaryBox.innerHTML = html;
+
+    splitPanel.innerHTML =
+      `<div class="split-item"><dt>Cessionary (${CESSIONARY_PCT}%)</dt><dd>${ready ? fmtCurrency(cessionaryAmount) : "—"}</dd></div>` +
+      `<div class="split-item"><dt>Trust Profit Share (${TRUST_PCT}%)</dt><dd>${ready ? fmtCurrency(trustAmount) : "—"}</dd></div>`;
 
     printBtn.disabled = !ready;
   }
