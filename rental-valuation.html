@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rental Valuation Tool</title>
+<title>Pinksterpark Rental Tool</title>
 <style>
   :root {
     --bg: #f3f5f8;
@@ -55,6 +55,7 @@
   }
   .tab {
     flex: 1;
+    min-width: 0;
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--muted);
@@ -139,6 +140,44 @@
   }
   .summary .subline dd { font-size: 1rem; font-weight: 600; }
 
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 20px;
+  }
+  .result-grid .summary { flex: 1; min-width: 0; }
+
+  .split-panel {
+    background: var(--result-bg);
+    border: 1px solid var(--result-line);
+    border-left: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    min-width: 160px;
+    text-align: right;
+  }
+  .split-panel .split-item + .split-item { margin-top: 14px; }
+  .split-panel dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+  }
+  .split-panel dd {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent-dark);
+    margin-top: 2px;
+  }
+
+  @media (max-width: 560px) {
+    .result-grid { grid-template-columns: 1fr; }
+    .split-panel { text-align: left; border-left: 1px solid var(--result-line); border-top: 3px solid var(--accent); }
+  }
+
   .action-row {
     display: flex;
     gap: 12px;
@@ -166,6 +205,18 @@
   button.secondary:hover { background: #e1eaf8; }
   button.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+  /* Small screens / mobile phones */
+  @media (max-width: 480px) {
+    body { padding: 20px 12px 60px; }
+    .intro { padding: 22px 20px; border-radius: 16px; }
+    .card { padding: 22px 18px 26px; border-radius: 16px; }
+    h1 { font-size: 1.5rem; }
+    .tab { font-size: 0.8rem; padding: 10px 6px; }
+    .summary, .split-panel { padding: 14px 16px; }
+    button.btn { width: 100%; }
+    .action-row { flex-direction: column; }
+  }
+
   /* Print styles */
   @media print {
     body { background: #fff; padding: 0; }
@@ -173,6 +224,7 @@
     .card { box-shadow: none; border: 1px solid #ccc; padding: 20px; margin-bottom: 16px; }
     .panel { display: block !important; }
     .panel + .panel { margin-top: 14px; }
+    .split-panel { border: 1px solid #ccc; }
   }
 </style>
 </head>
@@ -180,13 +232,14 @@
 <div class="wrap">
 
   <div class="intro">
-    <h1>Rental Valuation Tool</h1>
-    <p class="print-hide">Enter the unit's size and choose the condition assessment, and the tool calculates the Estimated Base Monthly Rental and Estimated Current Monthly Rental automatically. The rental rate escalates 7% year-on-year from 1 January 2027, based on the Date of Valuation.</p>
+    <h1>Pinksterpark Rental Tool</h1>
+    <p class="print-hide">Enter the unit's size and choose the construction material and condition assessment, and the tool calculates the Estimated Base Monthly Rental and Estimated Current Monthly Rental automatically. The rental rate escalates 7% year-on-year from 1 January 2027, based on the Date of Valuation.</p>
   </div>
 
   <div class="card">
     <div class="tabs print-hide" role="tablist">
       <button class="tab active" data-tab="details" type="button">Details</button>
+      <button class="tab" data-tab="material" type="button">Construction Material</button>
       <button class="tab" data-tab="condition" type="button">Condition Assessment</button>
     </div>
 
@@ -214,6 +267,20 @@
       </div>
     </section>
 
+    <!-- Construction Material -->
+    <section class="panel" id="material">
+      <h2>Construction Material</h2>
+      <p class="sub">Select the unit's primary construction material.</p>
+
+      <div class="field" data-field="material">
+        <label>Construction Material</label>
+        <select id="materialSelect">
+          <option value="">Select a construction material…</option>
+        </select>
+        <p class="error-text">Please select a construction material.</p>
+      </div>
+    </section>
+
     <!-- Condition Assessment -->
     <section class="panel" id="condition">
       <h2>Condition Assessment</h2>
@@ -232,7 +299,10 @@
 
   <div class="card results">
     <h2>Valuation Result</h2>
-    <dl class="summary" id="summaryBox"></dl>
+    <div class="result-grid">
+      <dl class="summary" id="summaryBox"></dl>
+      <dl class="split-panel" id="splitPanel"></dl>
+    </div>
 
     <div class="action-row print-hide">
       <button class="btn primary" id="printBtn" type="button" disabled>🖨️ Print Valuation</button>
@@ -242,7 +312,16 @@
 </div>
 
 <script>
-  const BASE_RATE = 150.00; // R per m² per month
+  const BASE_RATE = 110.00; // R per m² per month
+  const CESSIONARY_PCT = 80; // % of Estimated Current Monthly Rental
+  const TRUST_PCT = 20;      // % of Estimated Current Monthly Rental
+
+  const MATERIALS = [
+    { id: "brick",           label: "Brick",           pct: 100 },
+    { id: "nutec",           label: "Nutec",           pct: 80  },
+    { id: "timber",          label: "Timber",          pct: 70  },
+    { id: "metal_sheeting",  label: "Metal Sheeting",  pct: 60  },
+  ];
 
   const CONDITIONS = [
     { id: "brand_new",  label: "Brand New / Pristine",     desc: "Never used or recently completed; zero defects or wear.",                          pct: 100 },
@@ -261,7 +340,15 @@
   const ESCALATION_BASE_YEAR = ESCALATION_START_YEAR - 1; // 2026
   const ESCALATION_RATE = 0.07;
 
-  // Populate dropdown
+  // Populate dropdowns
+  const materialSelect = document.getElementById("materialSelect");
+  MATERIALS.forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m.id;
+    opt.textContent = `${m.label} (${m.pct}%)`;
+    materialSelect.appendChild(opt);
+  });
+
   const conditionSelect = document.getElementById("conditionSelect");
   CONDITIONS.forEach(c => {
     const opt = document.createElement("option");
@@ -303,6 +390,7 @@
   const rateChip = document.getElementById("rateChip");
   const conditionDesc = document.getElementById("conditionDesc");
   const summaryBox = document.getElementById("summaryBox");
+  const splitPanel = document.getElementById("splitPanel");
   const printBtn = document.getElementById("printBtn");
 
   let lastResult = null;
@@ -317,6 +405,7 @@
     const propertyRef = propertyRefEl.value.trim();
     const sqm = parseFloat(unitSqmEl.value);
     const valuationDate = valuationDateEl.value;
+    const material = MATERIALS.find(m => m.id === materialSelect.value);
     const condition = CONDITIONS.find(c => c.id === conditionSelect.value);
 
     // Rental rate chip
@@ -336,19 +425,24 @@
     }
 
     const validSqm = !isNaN(sqm) && sqm > 0;
-    const ready = validSqm && condition;
+    const ready = validSqm && material && condition;
 
     let baseRental = null;
     let currentRental = null;
+    let cessionaryAmount = null;
+    let trustAmount = null;
     if (ready) {
       baseRental = sqm * rate;
-      currentRental = baseRental * (condition.pct / 100);
+      currentRental = baseRental * (material.pct / 100) * (condition.pct / 100);
+      cessionaryAmount = currentRental * (CESSIONARY_PCT / 100);
+      trustAmount = currentRental * (TRUST_PCT / 100);
     }
 
     lastResult = ready ? {
-      propertyRef, sqm, valuationDate, condition,
+      propertyRef, sqm, valuationDate, material, condition,
       rate,
       baseRental, currentRental,
+      cessionaryAmount, trustAmount,
     } : null;
 
     // Summary
@@ -357,6 +451,7 @@
       ["Unit m²", validSqm ? `${sqm.toLocaleString("en-US")} m²` : "—"],
       ["Date of Valuation", valuationDate || "—"],
       ["Rental Rate", `${fmtCurrency(rate)}/m²`],
+      ["Construction Material", material ? `${material.label} (${material.pct}%)` : "—"],
       ["Condition Assessment", condition ? `${condition.label} (${condition.pct}%)` : "—"],
     ];
     let html = rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join("");
@@ -364,10 +459,14 @@
     html += `<div class="headline"><dt>Estimated Current Monthly Rental</dt><dd>${ready ? fmtCurrency(currentRental) : "—"}</dd></div>`;
     summaryBox.innerHTML = html;
 
+    splitPanel.innerHTML =
+      `<div class="split-item"><dt>Cessionary (${CESSIONARY_PCT}%)</dt><dd>${ready ? fmtCurrency(cessionaryAmount) : "—"}</dd></div>` +
+      `<div class="split-item"><dt>Trust Profit-Share (${TRUST_PCT}%)</dt><dd>${ready ? fmtCurrency(trustAmount) : "—"}</dd></div>`;
+
     printBtn.disabled = !ready;
   }
 
-  [propertyRefEl, unitSqmEl, valuationDateEl, conditionSelect].forEach(el => {
+  [propertyRefEl, unitSqmEl, valuationDateEl, materialSelect, conditionSelect].forEach(el => {
     el.addEventListener("input", recalculate);
     el.addEventListener("change", recalculate);
   });
