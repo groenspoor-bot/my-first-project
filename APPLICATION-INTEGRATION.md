@@ -50,6 +50,15 @@ Storage: `wp-content/uploads/pinksterpark-applications/{drafts,applications}/…
 Admin menu **Applications** (wp-admin) lists submissions with Summary and ZIP downloads.
 The office address is the WordPress option `pp_application_admin_email` (default admin@pinksterpark.co.za).
 
+## Outgoing email
+
+Emails are sent with `wp_mail()`, which WP Mail SMTP controls. On 10 October 2026 the site used the
+default PHP mailer with the From address forced to a @gmail.com address, so Gmail silently dropped every
+message (including WP Mail SMTP's own test email). The From address was changed to
+`admin@pinksterpark.co.za`, which the domain's SPF record (`v=spf1 mx a include:spf.host-h.net ?all`)
+authorises for the web server. For better deliverability, configure WP Mail SMTP with a real SMTP
+account (the mail.pinksterpark.co.za mailbox or a provider such as SendLayer/Brevo) and add DKIM.
+
 ## Installing the server side
 
 1. Install and activate the **Code Snippets** plugin (wordpress.org/plugins/code-snippets).
