@@ -4,6 +4,9 @@
 Pinksterpark. It has no build step and no dependencies other than the Plus Jakarta Sans web font,
 which matches the live site (WordPress + Houzez theme, primary colour `#2F5E99`).
 
+The server side is `wordpress/pinksterpark-application.php`, a WordPress snippet that receives drafts,
+file uploads and final submissions and emails them to the office.
+
 ## What the page covers
 
 Built from Annexure A (Application Criteria) and Forms A1–A6 and A8:
@@ -16,95 +19,88 @@ Built from Annexure A (Application Criteria) and Forms A1–A6 and A8:
 | Pets | Form A8 | Per-pet details, photo, vaccination record, proof of sterilisation, plus the health/control declarations. |
 | Motivation | Annexure A | Written motivation (100+ characters) and/or an uploaded letter. |
 | Declarations & consents | Forms A1, A3, A4, A5, A6, Annexures B & G | Tick-box acceptance with the full consent text expandable. Signed copies are still uploaded in the next step. |
-| Documents | Annexure A + Form A1 checklist | Required/optional chips adapt to earlier answers (spouse, foreign national, vehicles, disclosures). |
+| Documents | Annexure A + Form A1 checklist | Required/optional chips adapt to earlier answers (spouse, foreign national, vehicles, disclosures). The health certificate was removed on request. |
 | Review & submit | Form A1 | Summary with Edit links, R350 fee and FNB banking details, typed e-signature, outstanding-document acknowledgement. |
 
-Typed answers are saved in the visitor's browser (`localStorage`) so they can return later. Files
-cannot be saved and must be uploaded in the sitting in which the form is submitted.
+## How saving and submitting work
 
-## Connecting it to the office (the only required change)
+Everything goes through `https://pinksterpark.co.za/wp-json/pinksterpark/v1`:
 
-At the top of the `<script>` block there is a `CONFIG` object. Set `endpoint` to the URL that should
-receive applications and the page leaves preview mode automatically (the yellow banner disappears).
+| Call | Purpose |
+| --- | --- |
+| `POST /draft` | Create or update a draft. Body: `{ token?, email?, payload, notify? }`. Returns `{ token, resumeUrl, files, emailSent }`. With `notify: true` the applicant is emailed the resume link. |
+| `GET /draft/{token}` | Read a draft back (answers + list of uploaded files) to continue later. |
+| `POST /draft/{token}/file` | Upload **one** file (multipart: `key`, `file`). Files go up one at a time because the host caps requests at 32 MB. |
+| `DELETE /draft/{token}/file/{id}` | Remove an uploaded file. |
+| `POST /draft/{token}/submit` | Finalise. Moves the draft to `applications/PP-YYYYMMDD-XXXX/`, emails the office and the applicant, returns `{ reference, message }`. |
 
-```js
-const CONFIG = {
-  endpoint: "https://pinksterpark.co.za/wp-json/pinksterpark/v1/application",
-  headers: {},          // optional, e.g. { "X-Api-Key": "..." }
-  ...
-};
-```
+Behaviour in the page:
 
-The page sends one `POST` request as `multipart/form-data` containing:
+- A draft is created on the server after step 1, and updated on every step change. Each file is
+  uploaded the moment it is added, so uploads survive a closed tab.
+- **Save & continue later** asks for an email address and sends
+  `https://pinksterpark.co.za/application/?resume=<token>`. The WordPress page passes `resume` into the
+  iframe and the form restores answers and uploaded files. The token is also kept in `localStorage`
+  so the same browser resumes automatically. Drafts are deleted after 60 days.
+- On submit the office receives an HTML summary with all documents attached (up to 20 MB in total;
+  larger sets get a ZIP download link instead), and the applicant receives a confirmation with the
+  reference, fee details and any outstanding documents.
 
-- `reference` – client-generated reference such as `PP-20261010-AB12` (the server may return its own).
-- `payload` – a JSON string with every answer, the repeatable rows (`children`, `vehicles`,
-  `secondaryVehicles`, `references`, `pets`) and `outstandingDocuments` (required documents not uploaded).
-- `files[<key>][]` – the uploaded files. Keys are the document identifiers in the `DOCS` array
-  (`id_applicant`, `proof_of_income`, `signed_a3`, …) plus `photo_applicant`, `photo_spouse`,
-  `motivation_letter` and `pet_<n>_photo|vaccination|sterilisation`.
+Storage: `wp-content/uploads/pinksterpark-applications/{drafts,applications}/…`, protected by `.htaccess`.
+Admin menu **Applications** (wp-admin) lists submissions with Summary and ZIP downloads.
+The office address is the WordPress option `pp_application_admin_email` (default admin@pinksterpark.co.za).
 
-A JSON response of `{ "reference": "...", "message": "..." }` is used on the thank-you screen if present.
-Any non-2xx response shows a retry message with the admin email address.
+## Installing the server side
 
-Backend options, in order of how little work they need:
+1. Install and activate the **Code Snippets** plugin (wordpress.org/plugins/code-snippets).
+2. Snippets → Add New. Title "Pinksterpark application endpoint", type PHP, scope "Run snippet everywhere".
+3. Paste the contents of `wordpress/pinksterpark-application.php` **without the first `<?php` line**, save and activate.
+4. Check `https://pinksterpark.co.za/wp-json/pinksterpark/v1/draft/00000000000000000000000000000000` returns a JSON
+   "not found" error (that proves the routes are live), then test the form end to end.
 
-1. **WordPress plugin or snippet** registering a REST route (`register_rest_route`) that saves the
-   files with `wp_handle_upload()` and emails `admin@pinksterpark.co.za` with the payload. Keeps all
-   data on the Pinksterpark server, which is the simplest position for POPIA.
-2. **Gravity Forms / WPForms / Fluent Forms webhook** – not recommended; the multi-step logic and
-   conditional document list would have to be rebuilt in the form builder.
-3. **Hosted form backend** (Formspree, Basin, Getform) with file uploads enabled – quickest, but the
-   documents then live with a third party.
+Whenever the PHP file changes in this repo, paste the new version into the snippet.
 
 ## Putting it on pinksterpark.co.za
 
-Either option keeps the page as one file, so later updates are a single-file replace.
+`application.html` is served by GitHub Pages from the `main` branch of this repo at
+`https://groenspoor-bot.github.io/my-first-project/application.html`. GitHub Pages caches it for ten minutes.
 
-- **Embed (in use):** `application.html` is served by GitHub Pages from the `main` branch of this repo at
-  `https://groenspoor-bot.github.io/my-first-project/application.html`. The WordPress page "Application"
-  embeds it with a Custom HTML block. Adding `?embed=1` (or simply being inside an iframe) hides the
-  page's own header and background so the WordPress page supplies them:
+Live set-up (October 2026): WordPress page id 18835 (`/application/`, template `template/template-homepage.php`,
+one Custom HTML block) and Main Menu item id 18836 placed after Documents & Resources. The block is:
 
-  ```html
-  <iframe id="pp-apply" src="https://groenspoor-bot.github.io/my-first-project/application.html?embed=1" style="width:100%;border:0;min-height:900px" title="Pinksterpark application"></iframe>
-  <script>
-    (function () {
-      var f = document.getElementById("pp-apply");
-      addEventListener("message", function (e) {
-        if (e.origin !== "https://groenspoor-bot.github.io" || !e.data) return;
-        if (e.data.type === "pinksterpark-application:height") f.style.height = (e.data.height + 24) + "px";
-        if (e.data.type === "pinksterpark-application:scroll") {
-          var y = f.getBoundingClientRect().top + pageYOffset + (e.data.top || 0) - 100;
-          scrollTo({ top: Math.max(0, y), behavior: "smooth" });
-        }
-      });
-    })();
-  </script>
-  ```
+```html
+<div class="container pp-apply-wrap">
+  <div style="max-width:880px;margin:0 auto;padding:36px 0 60px">
+    <h1 …>Apply to live at Pinksterpark</h1>
+    <p …>intro</p>
+    <iframe id="pp-apply" title="Pinksterpark application form" style="width:100%;border:0;min-height:900px;display:block" scrolling="no"></iframe>
+  </div>
+</div>
+<script>
+(function(){
+  var f=document.getElementById('pp-apply');
+  var q=new URLSearchParams(window.location.search), resume=q.get('resume');
+  f.src='https://groenspoor-bot.github.io/my-first-project/application.html?embed=1'+(resume&&/^[a-f0-9]{32}$/.test(resume)?'&resume='+resume:'');
+  window.addEventListener('message',function(e){
+    if(e.origin!=='https://groenspoor-bot.github.io'||!e.data||typeof e.data.type!=='string')return;
+    if(e.data.type==='pinksterpark-application:height'){f.style.height=(e.data.height+24)+'px';}
+    if(e.data.type==='pinksterpark-application:scroll'){var y=f.getBoundingClientRect().top+window.pageYOffset+(e.data.top||0)-100;window.scrollTo({top:Math.max(0,y),behavior:'smooth'});}
+  });
+})();
+</script>
+```
 
-  The page posts its height to the parent, so the iframe grows with each step and never shows an inner
-  scrollbar, and asks the parent to scroll to the top of the form when the step changes.
-
-  Live set-up (October 2026): WordPress page id 18835 (`/application/`, template "template/template-homepage.php",
-  one Custom HTML block with the snippet above) and Main Menu item id 18836 placed after Documents & Resources.
-
-- **Native page:** paste the contents of `<style>` and `<body>` into a full-width Houzez page template.
-  The CSS is namespaced to the form's own classes and uses the same font as the theme.
-
-Then add "Apply" to the main menu (next to Documents & Resources) and link to it from the
-Available Homes and Accommodation pages.
+`?embed=1` (or simply being inside an iframe) hides the page's own header and background so the WordPress
+page supplies them; the page posts its height and a scroll request to the parent on each step change.
 
 ## Links to update once the documents are published
 
-`CONFIG.links` holds the download URLs for Forms A2–A6, A8 and Annexures B, G and I. They currently
-point to the Forms and Annexures listing pages; replace them with the direct PDF links once those are
-uploaded to the Documents & Resources section.
+`CONFIG.links` in `application.html` holds the download URLs for Forms A2–A6, A8 and Annexures B, G and I.
+They currently point to the Forms and Annexures listing pages; replace them with the direct PDF links once
+those are uploaded to the Documents & Resources section.
 
 ## Things to confirm with the Trust
 
 - Whether the police clearance certificate should be required for every applicant (currently required
   only when a criminal matter is disclosed, otherwise optional, per Annexure A's "if relevant").
-- Whether the health certificate and medical disclosure (on the Form A1 checklist but not in Annexure A)
-  should be required or optional.
-- The maximum upload size (`CONFIG.maxFileMB`, currently 10 MB per file) once the backend is chosen.
+- The attachment limit for office emails (`PPAPP_ATTACH_LIMIT_BYTES`, 20 MB) and per-file limit (10 MB).

@@ -42,14 +42,7 @@
   .wrap { max-width: 880px; margin: 0 auto; }
 
   /* Header */
-  .hero {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 32px 36px;
-    margin-bottom: 20px;
-    border-top: 4px solid var(--brand);
-  }
+  .hero { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px 36px; margin-bottom: 20px; border-top: 4px solid var(--brand); }
   .hero .eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
   .hero h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 10px; color: var(--brand-dark); }
   .hero p { color: var(--muted); max-width: 64ch; }
@@ -64,6 +57,7 @@
   .banner.danger { background: var(--danger-soft); border-color: #f2c4bd; color: #8a2619; }
   .banner strong { font-weight: 700; }
   .banner ul { margin: 6px 0 0 18px; }
+  .banner a { color: inherit; font-weight: 600; }
 
   /* Progress */
   .progress { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 20px; }
@@ -72,12 +66,7 @@
   .progress .label { font-size: 0.9rem; font-weight: 600; color: var(--brand-dark); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .progress .label .saved { font-weight: 500; color: var(--muted); font-size: 0.82rem; }
   .steps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .steps button {
-    font: inherit; font-size: 0.78rem; font-weight: 600;
-    border: 1px solid var(--line); background: var(--bg); color: var(--muted);
-    padding: 6px 10px; border-radius: 999px; cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-  }
+  .steps button { font: inherit; font-size: 0.78rem; font-weight: 600; border: 1px solid var(--line); background: var(--bg); color: var(--muted); padding: 6px 10px; border-radius: 999px; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
   .steps button.done { color: var(--brand-dark); border-color: var(--brand-line); background: var(--brand-soft); }
   .steps button.current { background: var(--brand); color: #fff; border-color: var(--brand); }
   .steps button:disabled { cursor: default; opacity: 0.6; }
@@ -90,6 +79,7 @@
   @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
   .panel h2 { font-size: 1.35rem; font-weight: 800; color: var(--brand-dark); margin-bottom: 6px; }
   .panel .sub { color: var(--muted); margin-bottom: 22px; font-size: 0.95rem; }
+  .panel .sub a { color: var(--brand); }
   h3 { font-size: 1rem; font-weight: 700; margin: 26px 0 12px; color: var(--text); padding-bottom: 6px; border-bottom: 1px solid var(--line); }
   h3.first { margin-top: 6px; }
 
@@ -99,9 +89,7 @@
   label, .lbl { font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
   label.req::after, .lbl.req::after { content: " *"; color: var(--danger); }
   input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select, textarea {
-    width: 100%; font: inherit; font-size: 0.98rem;
-    padding: 11px 13px; border: 1px solid #cfd5df; border-radius: 6px; background: #fff; color: var(--text);
-    outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%; font: inherit; font-size: 0.98rem; padding: 11px 13px; border: 1px solid #cfd5df; border-radius: 6px; background: #fff; color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s;
   }
   textarea { min-height: 130px; resize: vertical; }
   input:focus, select:focus, textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(47, 94, 153, 0.15); }
@@ -174,15 +162,15 @@
   .files li .icon { width: 34px; height: 34px; border-radius: 4px; background: var(--brand-soft); color: var(--brand-dark); display: grid; place-items: center; font-size: 0.62rem; font-weight: 800; flex: none; }
   .files li .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .files li .size { color: var(--muted); flex: none; }
+  .files li .status { flex: none; font-size: 0.75rem; font-weight: 700; }
+  .files li .status.up { color: var(--warn); }
+  .files li .status.ok { color: var(--ok); }
   .files li button { font: inherit; background: none; border: none; color: var(--danger); font-weight: 700; cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 2px 6px; }
   .upload-err { font-size: 0.82rem; color: var(--danger); margin-top: 6px; }
   .doc-group-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 22px 0 10px; }
   .doc-group-title:first-child { margin-top: 0; }
 
   /* Info blocks */
-  .info-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 14px 0 4px; }
-  .info-list .item { background: var(--bg); border-radius: var(--radius); padding: 14px 16px; font-size: 0.9rem; }
-  .info-list .item b { display: block; color: var(--brand-dark); margin-bottom: 4px; }
   ul.plain { padding-left: 20px; font-size: 0.92rem; color: #333; display: flex; flex-direction: column; gap: 6px; }
   .bank { background: var(--brand-soft); border: 1px solid var(--brand-line); border-radius: var(--radius); padding: 16px 20px; margin-top: 8px; }
   .bank dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; font-size: 0.93rem; }
@@ -198,6 +186,7 @@
   .review-section dd { font-weight: 600; word-break: break-word; }
   .review-section .none { color: var(--muted); font-style: italic; font-size: 0.9rem; }
   .review-section ul { padding-left: 18px; font-size: 0.9rem; }
+  .review-section p.text { font-size: 0.9rem; white-space: pre-wrap; }
 
   /* Nav */
   .nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); flex-wrap: wrap; }
@@ -207,10 +196,22 @@
   .btn.primary:disabled { opacity: 0.6; cursor: wait; box-shadow: none; }
   .btn.ghost { background: #fff; color: var(--brand-dark); border-color: #cfd5df; }
   .btn.ghost:hover { background: var(--bg); }
+  .btn.save { background: var(--brand-soft); color: var(--brand-dark); border-color: var(--brand-line); font-size: 0.9rem; padding: 11px 18px; }
+  .btn.save:hover { background: #dfe8f5; }
   .btn:active { transform: translateY(1px); }
   .nav .btn-text { font: inherit; font-size: 0.85rem; color: var(--muted); background: none; border: none; cursor: pointer; text-decoration: underline; }
+  .nav .mid { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; }
   .step-error { display: none; margin-top: 16px; }
   .step-error.show { display: block; }
+
+  /* Save & continue dialog */
+  dialog.dialog { border: none; border-radius: var(--radius); box-shadow: 0 24px 60px rgba(0,0,0,0.25); padding: 28px 30px; max-width: 520px; width: calc(100% - 32px); color: var(--text); font-family: inherit; }
+  dialog.dialog::backdrop { background: rgba(20, 30, 50, 0.45); }
+  dialog.dialog h3 { margin: 0 0 8px; border: none; padding: 0; font-size: 1.2rem; color: var(--brand-dark); }
+  dialog.dialog p { color: var(--muted); font-size: 0.93rem; margin-bottom: 16px; }
+  dialog.dialog .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+  dialog.dialog .link-box { font-size: 0.82rem; word-break: break-all; background: var(--bg); border-radius: 6px; padding: 8px 10px; margin-top: 8px; }
+  dialog.dialog .banner { margin: 14px 0 0; }
 
   /* Success */
   .success { text-align: center; padding: 20px 0 10px; }
@@ -236,9 +237,12 @@
     .steps { display: none; }
     .review-section dl { grid-template-columns: 1fr; gap: 2px 0; }
     .review-section dd { margin-bottom: 8px; }
-    .nav .btn { flex: 1 1 45%; text-align: center; }
+    .nav { flex-direction: column-reverse; align-items: stretch; }
+    .nav .btn { width: 100%; text-align: center; }
+    .nav .mid { order: 1; }
     .bank dl { grid-template-columns: 1fr; gap: 2px; }
     .bank dd { margin-bottom: 8px; }
+    dialog.dialog { padding: 22px 18px; }
   }
   @media print {
     body { background: #fff; padding: 0; }
@@ -253,16 +257,14 @@
   <header class="hero">
     <div class="eyebrow">Pinksterpark · A Christian Residential Community</div>
     <h1>Apply to live at Pinksterpark</h1>
-    <p>Application for a cession or rental at Pinksterpark. Complete the steps below and upload your supporting documents. Your answers are saved on this device as you go, so you can return later to finish.</p>
+    <p>Application for a cession or rental at Pinksterpark. Complete the steps below and upload your supporting documents. Your progress is saved as you go, and you can use <em>Save &amp; continue later</em> at any time to receive a link by email so you can finish on any device.</p>
     <div class="meta">
       <span>Questions? <a href="mailto:admin@pinksterpark.co.za">admin@pinksterpark.co.za</a></span>
       <span><a href="tel:+27609891144">+27 60 989 1144</a> (Mon–Fri, 9am–5pm)</span>
     </div>
   </header>
 
-  <div id="demoBanner" class="banner warn" style="display:none">
-    <strong>Preview mode.</strong> This form is not yet connected to the office. Submissions are shown on screen only and nothing is sent.
-  </div>
+  <div id="noticeBanner" class="banner" style="display:none"></div>
 
   <div class="progress" id="progress">
     <div class="bar"><span id="progressBar"></span></div>
@@ -322,13 +324,12 @@
       <div id="eligibilityNote" class="banner" style="display:none;margin-top:18px"></div>
 
       <h3>What you will need</h3>
-      <p class="hint" style="margin-bottom:10px">Have scans or clear photos ready (PDF, JPG or PNG, up to <span data-max-mb></span> MB each). You can also submit now and email outstanding documents afterwards.</p>
+      <p class="hint" style="margin-bottom:10px">Have scans or clear photos ready (PDF, JPG or PNG, up to <span data-max-mb></span> MB each). Each file is saved to your application as soon as you add it, so you can stop and continue later. You can also submit now and email outstanding documents afterwards.</p>
       <ul class="plain">
         <li>Church Board confirmation of AFM of SA membership (Form A2, completed by your church board)</li>
         <li>ID documents of both spouses and your marriage certificate, if applicable</li>
         <li>Current proof of address (FICA) and proof of income (last three months' bank statements)</li>
         <li>Vehicle registration papers and proof of vehicle insurance, if you have vehicles</li>
-        <li>Health certificate and medical disclosure (Pinkster Park does not have medical facilities)</li>
         <li>Police clearance certificate, where relevant to community safety</li>
         <li>Pet vaccination and sterilisation certificates, if you have pets</li>
         <li>A recent photograph of each applicant and a motivation letter</li>
@@ -385,7 +386,7 @@
           <label class="req" for="a_email">Email address</label>
           <input id="a_email" name="applicant.email" type="email" required autocomplete="email" />
           <div class="err">Please enter a valid email address.</div>
-          <div class="hint">We will send your application reference to this address.</div>
+          <div class="hint">We will send your application reference and any save-and-continue links to this address.</div>
         </div>
         <div class="field span2">
           <label class="req" for="a_address">Current residential address</label>
@@ -395,7 +396,7 @@
         <div class="field span2 photo-wrap">
           <span class="lbl req">Recent photograph of applicant</span>
           <div class="hint" style="margin:-2px 0 6px">A clear, recent head-and-shoulders photo for identification and internal records.</div>
-          <div data-uploader="photo_applicant" data-accept="image/*" data-required="1"></div>
+          <div data-uploader="photo_applicant" data-accept="image/*" data-single="1"></div>
         </div>
       </div>
     </section>
@@ -432,7 +433,7 @@
         </div>
         <div class="field span2 photo-wrap">
           <span class="lbl req">Recent photograph of spouse</span>
-          <div data-uploader="photo_spouse" data-accept="image/*" data-required="spouse"></div>
+          <div data-uploader="photo_spouse" data-accept="image/*" data-single="1"></div>
         </div>
       </div>
     </section>
@@ -660,24 +661,12 @@
           <textarea id="behaviourDisclosure" name="behaviour.disclosure" style="min-height:70px" placeholder="Brief particulars and present circumstances."></textarea>
         </div>
       </div>
-
-      <div class="consent-box check-group" data-group="medical">
-        <h4>Medical facilities</h4>
-        <div class="form-ref">Important notice</div>
-        <div class="checks">
-          <label><input type="checkbox" name="medical.ack" /> I understand that Pinkster Park does not have medical facilities and that a health certificate and medical disclosure form part of my application.</label>
-        </div>
-        <div class="err">Please acknowledge this notice.</div>
-      </div>
     </section>
 
     <!-- 10. DOCUMENTS -->
     <section class="panel" data-step="documents">
       <h2>Supporting documents</h2>
-      <p class="sub">Upload clear scans or photos (PDF, JPG or PNG, up to <span data-max-mb></span> MB each). Items marked <span class="chip req">Required</span> are needed before an interview can be scheduled. If you do not have everything yet, you can still submit and email the rest to <a href="mailto:admin@pinksterpark.co.za">admin@pinksterpark.co.za</a> with your reference number.</p>
-      <div class="banner info" style="margin-bottom:18px">
-        <strong>Your uploads are kept only while this page is open.</strong> Typed answers are saved on this device, but files cannot be. Please complete the upload step and submit in one sitting.
-      </div>
+      <p class="sub">Upload clear scans or photos (PDF, JPG or PNG, up to <span data-max-mb></span> MB each). Items marked <span class="chip req">Required</span> are needed before an interview can be scheduled. If you do not have everything yet, you can save and come back later, or submit now and email the rest to <a href="mailto:admin@pinksterpark.co.za">admin@pinksterpark.co.za</a> with your reference number.</p>
       <div id="docList" class="doc-list"></div>
     </section>
 
@@ -758,13 +747,31 @@
 
     <div class="nav" id="nav">
       <button type="button" class="btn ghost" id="backBtn">Back</button>
-      <button type="button" class="btn-text" id="resetBtn">Clear saved answers</button>
+      <div class="mid">
+        <button type="button" class="btn save" id="saveLaterBtn">Save &amp; continue later</button>
+        <button type="button" class="btn-text" id="resetBtn">Start over</button>
+      </div>
       <button type="button" class="btn primary" id="nextBtn">Continue</button>
     </div>
   </form>
 
   <footer class="note">AFM of SA Pinkster Park Trust · C/O N2 Highway &amp; Mondeor Road, Helderberg Rural, Cape Town, 7135 · <a href="https://pinksterpark.co.za" target="_blank" rel="noopener">pinksterpark.co.za</a></footer>
 </div>
+
+<dialog id="saveDialog" class="dialog" aria-labelledby="saveDialogTitle">
+  <h3 id="saveDialogTitle">Save and continue later</h3>
+  <p>Your answers and the documents you have uploaded so far are saved. We will email you a private link so you can pick up where you left off, on this or any other device. Saved applications are kept for 60 days.</p>
+  <div class="field">
+    <label class="req" for="saveEmail">Email address</label>
+    <input id="saveEmail" type="email" autocomplete="email" />
+    <div class="err">Please enter a valid email address.</div>
+  </div>
+  <div id="saveResult" class="banner ok" style="display:none"></div>
+  <div class="actions">
+    <button type="button" class="btn ghost" id="saveClose">Close</button>
+    <button type="button" class="btn primary" id="saveSend">Email me the link</button>
+  </div>
+</dialog>
 
 <!-- Row templates -->
 <template id="tpl-child">
@@ -829,21 +836,17 @@
   "use strict";
 
   /* =========================================================================
-   * CONFIGURATION — the only part that needs editing when wiring this page
-   * into pinksterpark.co.za. See APPLICATION-INTEGRATION.md.
+   * CONFIGURATION. The server side is wordpress/pinksterpark-application.php
+   * (installed on pinksterpark.co.za). See APPLICATION-INTEGRATION.md.
    * ========================================================================= */
   const CONFIG = {
-    // Where the completed application is POSTed as multipart/form-data.
-    // Leave empty for preview mode (nothing is sent; a banner says so).
-    endpoint: "",
-    // Optional extra headers for the endpoint (e.g. an API key or WP nonce).
-    headers: {},
+    apiBase: "https://pinksterpark.co.za/wp-json/pinksterpark/v1",
     adminEmail: "admin@pinksterpark.co.za",
     paymentEmail: "wilma@agspaarl.co.za",
     maxFileMB: 10,
     maxFilesPerDoc: 6,
     acceptDefault: ".pdf,.jpg,.jpeg,.png,.heic,.webp,.doc,.docx",
-    // Download links for the forms/annexures referenced on the page.
+    allowedExt: ["pdf", "jpg", "jpeg", "png", "heic", "heif", "webp", "doc", "docx"],
     links: {
       forms: "https://pinksterpark.co.za/documents/forms/",
       annexures: "https://pinksterpark.co.za/documents/annexures/",
@@ -857,7 +860,7 @@
       formA6: "https://pinksterpark.co.za/documents/forms/",
       formA8: "https://pinksterpark.co.za/documents/forms/"
     },
-    storageKey: "pinksterpark-application-draft-v1"
+    tokenKey: "pinksterpark-application-token"
   };
 
   /* ---------- Helpers ---------- */
@@ -867,7 +870,26 @@
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const fmtBytes = (b) => b > 1048576 ? (b / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB";
   const todayISO = () => new Date().toISOString().slice(0, 10);
+  const timeNow = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const rid = () => Math.random().toString(36).slice(2, 10);
   const val = (name) => { const el = form.elements[name]; if (!el) return ""; if (el instanceof RadioNodeList) return el.value; return el.type === "checkbox" ? el.checked : el.value.trim(); };
+  const hidden = (el) => !!el.closest("[style*='display:none'], [style*='display: none']");
+
+  function notice(kind, html) { const b = $("#noticeBanner"); if (!html) { b.style.display = "none"; return; } b.className = "banner " + kind; b.innerHTML = html; b.style.display = ""; }
+
+  /* ---------- API ---------- */
+  async function api(path, { method = "GET", json, form: fd } = {}) {
+    const opts = { method, headers: {} };
+    if (json) { opts.headers["Content-Type"] = "application/json"; opts.body = JSON.stringify(json); }
+    if (fd) opts.body = fd;
+    let res;
+    try { res = await fetch(CONFIG.apiBase + path, opts); }
+    catch (_) { throw new Error("Could not reach the server. Please check your internet connection and try again."); }
+    let body = null;
+    try { body = await res.json(); } catch (_) { /* no JSON body */ }
+    if (!res.ok) throw Object.assign(new Error((body && body.message) || `The server returned an error (${res.status}).`), { status: res.status, code: body && body.code });
+    return body;
+  }
 
   /* ---------- Steps ---------- */
   const STEPS = [
@@ -899,19 +921,48 @@
   }
   const activeSteps = () => STEPS.filter((s) => !s.when || s.when());
 
+  /* ---------- Draft on the server ---------- */
+  let token = null;
+  let saveTimer = null;
+  function rememberToken(t) { token = t; try { localStorage.setItem(CONFIG.tokenKey, t); } catch (_) {} }
+  function forgetToken() { token = null; try { localStorage.removeItem(CONFIG.tokenKey); } catch (_) {} }
+  function storedToken() { try { return localStorage.getItem(CONFIG.tokenKey); } catch (_) { return null; } }
+  let draftPromise = null;
+  function ensureDraft() {
+    if (token) return Promise.resolve(token);
+    if (!draftPromise) {
+      draftPromise = api("/draft", { method: "POST", json: { payload: buildPayload(), email: val("applicant.email") } })
+        .then((res) => { rememberToken(res.token); return token; })
+        .finally(() => { draftPromise = null; });
+    }
+    return draftPromise;
+  }
+  async function saveDraft({ notify = false, email } = {}) {
+    await ensureDraft();
+    const res = await api("/draft", { method: "POST", json: { token, payload: buildPayload(), email: email ?? val("applicant.email"), notify } });
+    $("#savedNote").textContent = "Saved " + timeNow();
+    return res;
+  }
+  function saveDraftQuietly() {
+    if (!token) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => saveDraft().catch(() => { $("#savedNote").textContent = "Not saved: connection problem"; }), 400);
+  }
+
   /* ---------- Uploader component ---------- */
-  const files = {}; // key -> File[]
-  const uploaders = {}; // key -> {render}
+  const files = {};     // key -> [{ id, key, name, size, type, remote, uploading, preview }]
+  const uploaders = {}; // key -> { host, render }
+  const uploadsInProgress = () => Object.values(files).some((arr) => arr.some((f) => f.uploading));
 
   function makeUploader(host, key, opts = {}) {
     const accept = opts.accept || CONFIG.acceptDefault;
-    const multiple = opts.multiple !== false;
+    const single = !!opts.single;
     files[key] = files[key] || [];
     host.classList.add("uploader");
     host.innerHTML = `
       <div class="drop" tabindex="0" role="button" aria-label="Upload file">
-        <span><b>Choose ${multiple ? "files" : "a file"}</b> or drag &amp; drop here</span>
-        <input type="file" accept="${esc(accept)}" ${multiple ? "multiple" : ""} />
+        <span><b>Choose ${single ? "a file" : "files"}</b> or drag &amp; drop here</span>
+        <input type="file" accept="${esc(accept)}" ${single ? "" : "multiple"} />
       </div>
       <ul class="files"></ul>
       <div class="upload-err" hidden></div>`;
@@ -919,23 +970,40 @@
 
     const render = () => {
       list.innerHTML = files[key].map((f, i) => {
-        const isImg = f.type.startsWith("image/");
-        const thumb = isImg ? `<img alt="" src="${URL.createObjectURL(f)}" />` : `<span class="icon">${esc((f.name.split(".").pop() || "FILE").toUpperCase().slice(0, 4))}</span>`;
-        return `<li>${thumb}<span class="name" title="${esc(f.name)}">${esc(f.name)}</span><span class="size">${fmtBytes(f.size)}</span><button type="button" aria-label="Remove ${esc(f.name)}" data-i="${i}">×</button></li>`;
+        const thumb = f.preview ? `<img alt="" src="${f.preview}" />` : `<span class="icon">${esc((f.name.split(".").pop() || "FILE").toUpperCase().slice(0, 4))}</span>`;
+        const status = f.uploading ? `<span class="status up">Uploading…</span>` : `<span class="status ok">✓ Saved</span>`;
+        const remove = f.uploading ? "" : `<button type="button" aria-label="Remove ${esc(f.name)}" data-i="${i}">×</button>`;
+        return `<li>${thumb}<span class="name" title="${esc(f.name)}">${esc(f.name)}</span><span class="size">${fmtBytes(f.size)}</span>${status}${remove}</li>`;
       }).join("");
       host.dispatchEvent(new CustomEvent("files-changed", { bubbles: true }));
     };
-    const add = (incoming) => {
+    const showErr = (msgs) => { err.hidden = msgs.length === 0; err.textContent = msgs.join(" "); };
+    const add = async (incoming) => {
       const problems = [];
       for (const f of incoming) {
+        const ext = (f.name.split(".").pop() || "").toLowerCase();
+        if (!CONFIG.allowedExt.includes(ext)) { problems.push(`${f.name}: this file type is not allowed (use PDF, JPG, PNG, HEIC, WEBP, DOC or DOCX).`); continue; }
         if (f.size > CONFIG.maxFileMB * 1048576) { problems.push(`${f.name} is larger than ${CONFIG.maxFileMB} MB.`); continue; }
         if (files[key].some((x) => x.name === f.name && x.size === f.size)) continue;
-        if (!multiple) files[key] = [];
-        if (files[key].length >= CONFIG.maxFilesPerDoc) { problems.push(`You can upload at most ${CONFIG.maxFilesPerDoc} files here.`); break; }
-        files[key].push(f);
+        if (!single && files[key].length >= CONFIG.maxFilesPerDoc) { problems.push(`You can upload at most ${CONFIG.maxFilesPerDoc} files here.`); break; }
+        if (single) { files[key].filter((x) => x.remote).forEach((x) => api(`/draft/${token}/file/${x.id}`, { method: "DELETE" }).catch(() => {})); files[key] = []; }
+        const entry = { name: f.name, size: f.size, type: f.type, uploading: true, preview: f.type.startsWith("image/") ? URL.createObjectURL(f) : null };
+        files[key].push(entry);
+        render();
+        try {
+          await ensureDraft();
+          const fd = new FormData();
+          fd.append("key", key);
+          fd.append("file", f, f.name);
+          const res = await api(`/draft/${token}/file`, { method: "POST", form: fd });
+          Object.assign(entry, res, { uploading: false, remote: true });
+        } catch (e) {
+          files[key] = files[key].filter((x) => x !== entry);
+          problems.push(`${f.name}: ${e.message}`);
+        }
+        render();
       }
-      err.hidden = problems.length === 0; err.textContent = problems.join(" ");
-      render();
+      showErr(problems);
     };
     drop.addEventListener("click", () => input.click());
     drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.click(); } });
@@ -943,12 +1011,17 @@
     ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
     ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
     drop.addEventListener("drop", (e) => add(Array.from(e.dataTransfer.files)));
-    list.addEventListener("click", (e) => { const b = e.target.closest("button[data-i]"); if (!b) return; files[key].splice(+b.dataset.i, 1); render(); });
+    list.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-i]"); if (!b) return;
+      const [entry] = files[key].splice(+b.dataset.i, 1);
+      render();
+      if (entry && entry.remote && token) api(`/draft/${token}/file/${entry.id}`, { method: "DELETE" }).catch(() => showErr([`${entry.name} could not be removed from the server. Please try again.`]));
+    });
     uploaders[key] = { host, render };
     render();
     return uploaders[key];
   }
-  $$("[data-uploader]").forEach((h) => makeUploader(h, h.dataset.uploader, { accept: h.dataset.accept, multiple: !h.dataset.accept?.startsWith("image") }));
+  $$("[data-uploader]").forEach((h) => makeUploader(h, h.dataset.uploader, { accept: h.dataset.accept, single: !!h.dataset.single }));
 
   /* ---------- Document requirements (Annexure A + Form A1 checklist) ---------- */
   const L = CONFIG.links;
@@ -963,18 +1036,17 @@
 
     { group: "Address, income & affordability" },
     { key: "proof_of_address", title: "Current proof of address (FICA)", desc: "Municipal account, bank statement or similar, not older than three months.", required: () => true },
-    { key: "proof_of_income", title: "Proof of income", desc: "Your last three months' bank statements. Payslips or a pension statement may be added.", required: () => true, multiple: true },
+    { key: "proof_of_income", title: "Proof of income", desc: "Your last three months' bank statements. Payslips or a pension statement may be added.", required: () => true },
 
     { group: "Vehicles" },
-    { key: "vehicle_registration", title: "Vehicle registration papers", desc: "Registration certificate or licence disc for each vehicle, trailer or caravan listed.", show: () => ctx().vehicles, required: () => true, multiple: true },
-    { key: "vehicle_insurance", title: "Proof of vehicle insurance", desc: "Insurance schedule or confirmation letter for each vehicle.", show: () => ctx().vehicles, required: () => true, multiple: true },
+    { key: "vehicle_registration", title: "Vehicle registration papers", desc: "Registration certificate or licence disc for each vehicle, trailer or caravan listed.", show: () => ctx().vehicles, required: () => true },
+    { key: "vehicle_insurance", title: "Proof of vehicle insurance", desc: "Insurance schedule or confirmation letter for each vehicle.", show: () => ctx().vehicles, required: () => true },
 
-    { group: "Health & safety" },
-    { key: "health_certificate", title: "Health certificate and medical disclosure", desc: "Pinkster Park does not have medical facilities. A recent certificate from your doctor with any relevant medical disclosure.", required: () => true },
+    { group: "Community safety" },
     { key: "police_clearance", title: "Police clearance certificate", desc: () => ctx().criminalDisclosure ? "Required because a matter was disclosed in the declarations step. Please also attach court documents or sworn declarations where relevant." : "Issued by the SAPS Criminal Record Centre. Management may require this before your interview.", required: () => ctx().criminalDisclosure },
 
     { group: "Signed forms" },
-    { key: "signed_rules", title: () => ctx().type === "rental" ? "Signed acceptance of the Park Rules" : "Signed acceptance of the Park Rules and Cession Rules", desc: () => `Sign the acceptance page of the <a href="${L.parkRules}" target="_blank" rel="noopener">Park Rules</a>${ctx().type === "rental" ? "" : ` and the <a href="${L.cessionRules}" target="_blank" rel="noopener">Cession Rules</a>`} and upload the signed page(s).`, required: () => true, multiple: true },
+    { key: "signed_rules", title: () => ctx().type === "rental" ? "Signed acceptance of the Park Rules" : "Signed acceptance of the Park Rules and Cession Rules", desc: () => `Sign the acceptance page of the <a href="${L.parkRules}" target="_blank" rel="noopener">Park Rules</a>${ctx().type === "rental" ? "" : ` and the <a href="${L.cessionRules}" target="_blank" rel="noopener">Cession Rules</a>`} and upload the signed page(s).`, required: () => true },
     { key: "signed_a3", title: "Signed consent to process personal information (Form A3)", desc: () => `Signed by applicant, spouse (if applicable) and a witness. <a href="${L.formA3}" target="_blank" rel="noopener">Download Form A3</a>.`, required: () => true },
     { key: "signed_a4", title: "Signed consent for credit check and debt review (Form A4)", desc: () => `<a href="${L.formA4}" target="_blank" rel="noopener">Download Form A4</a>.`, required: () => true },
     { key: "signed_a5", title: "Signed criminal history declaration (Form A5)", desc: () => `<a href="${L.formA5}" target="_blank" rel="noopener">Download Form A5</a>.`, required: () => true },
@@ -982,7 +1054,7 @@
 
     { group: "Payment & other" },
     { key: "proof_of_payment", title: "Proof of payment of the R350 application fee", desc: "FNB, account 53751120263, branch 250655, reference UnitNr_Surname. You may also email it to " + CONFIG.paymentEmail + ".", required: () => true },
-    { key: "other", title: "Any other supporting documents", desc: "Anything else you would like us to consider, e.g. a reference letter from your pastor.", required: () => false, multiple: true }
+    { key: "other", title: "Any other supporting documents", desc: "Anything else you would like us to consider, e.g. a reference letter from your pastor.", required: () => false }
   ];
   const docDefs = DOCS.filter((d) => d.key);
   const call = (v) => typeof v === "function" ? v() : v;
@@ -992,7 +1064,6 @@
 
   function renderDocs() {
     const list = $("#docList");
-    // Preserve uploader hosts between renders so files/listeners survive.
     const existing = {};
     $$("[data-doc-host]", list).forEach((h) => (existing[h.dataset.docHost] = h));
     list.innerHTML = "";
@@ -1004,12 +1075,11 @@
       card.dataset.key = d.key;
       card.innerHTML = `<div class="doc-head"><div><div class="title">${esc(docTitle(d))}</div><div class="desc">${call(d.desc) || ""}</div></div><span class="chip"></span></div>`;
       let host = existing[d.key];
-      if (!host) { host = document.createElement("div"); host.dataset.docHost = d.key; makeUploader(host, d.key, { multiple: d.multiple !== false }); }
+      if (!host) { host = document.createElement("div"); host.dataset.docHost = d.key; makeUploader(host, d.key); }
       card.appendChild(host);
       list.appendChild(card);
     });
-    // Hide empty group titles
-    $$(".doc-group-title", list).forEach((t) => { let n = t.nextElementSibling; t.style.display = n && !n.dataset.group ? "" : "none"; });
+    $$(".doc-group-title", list).forEach((t) => { const n = t.nextElementSibling; t.style.display = n && !n.dataset.group ? "" : "none"; });
     updateDocStates();
   }
   function updateDocStates() {
@@ -1029,7 +1099,7 @@
     if (ctx().spouse && !(files.photo_spouse || []).length) out.unshift("Photograph of spouse");
     if (!ctx().motivationText && !(files.motivation_letter || []).length) out.push("Motivation letter (or written motivation)");
     if (ctx().pets) $$("#petRows .row-card").forEach((row, i) => {
-      ["photo", "vaccination", "sterilisation"].forEach((k) => { if (!(files[`pet_${row.dataset.uid}_${k}`] || []).length) out.push(`Pet ${i + 1}: ${k === "photo" ? "photo" : k === "vaccination" ? "vaccination record" : "proof of sterilisation"}`); });
+      ["photo", "vaccination", "sterilisation"].forEach((k) => { if (!(files[`pet_${row.dataset.pid}_${k}`] || []).length) out.push(`Pet ${i + 1}: ${k === "photo" ? "photo" : k === "vaccination" ? "vaccination record" : "proof of sterilisation"}`); });
     });
     return out;
   }
@@ -1038,19 +1108,25 @@
   /* ---------- Repeatable rows ---------- */
   const ROW_LIMITS = { child: 8, vehicle: 4, secondary: 4, ref: 4, pet: 4 };
   const ROW_HOST = { child: "childRows", vehicle: "vehicleRows", secondary: "secondaryRows", ref: "refRows", pet: "petRows" };
-  let uid = 0;
   function addRow(kind, data = {}) {
     const host = $("#" + ROW_HOST[kind]);
     if (host.children.length >= ROW_LIMITS[kind]) return null;
     const tpl = $("#tpl-" + (kind === "secondary" ? "vehicle" : kind));
     const node = tpl.content.firstElementChild.cloneNode(true);
     node.dataset.kind = kind;
-    node.dataset.uid = String(++uid);
     if (kind === "secondary") $(".kind", node).textContent = "Trailer / caravan";
     $$("[data-f]", node).forEach((el) => { if (data[el.dataset.f] != null) el.value = data[el.dataset.f]; });
-    $$("[data-pet-uploader]", node).forEach((h) => makeUploader(h, `pet_${node.dataset.uid}_${h.dataset.petUploader}`, { accept: h.dataset.accept, multiple: false }));
-    $("[data-remove]", node).addEventListener("click", () => { Object.keys(files).filter((k) => k.startsWith(`pet_${node.dataset.uid}_`)).forEach((k) => delete files[k]); node.remove(); renumber(kind); saveDraft(); });
-    if (kind === "pet") { const st = $('[data-f="sterilised"]', node); const warn = $(".pet-steril-warn", node); st.addEventListener("change", () => (warn.style.display = st.value === "No" ? "block" : "none")); }
+    if (kind === "pet") {
+      node.dataset.pid = data.pid || rid();
+      $$("[data-pet-uploader]", node).forEach((h) => makeUploader(h, `pet_${node.dataset.pid}_${h.dataset.petUploader}`, { accept: h.dataset.accept, single: true }));
+      const st = $('[data-f="sterilised"]', node); const warn = $(".pet-steril-warn", node);
+      const warnUpdate = () => (warn.style.display = st.value === "No" ? "block" : "none");
+      st.addEventListener("change", warnUpdate); warnUpdate();
+    }
+    $("[data-remove]", node).addEventListener("click", () => {
+      if (kind === "pet") Object.keys(files).filter((k) => k.startsWith(`pet_${node.dataset.pid}_`)).forEach((k) => { files[k].filter((f) => f.remote && token).forEach((f) => api(`/draft/${token}/file/${f.id}`, { method: "DELETE" }).catch(() => {})); delete files[k]; });
+      node.remove(); renumber(kind); saveDraftQuietly();
+    });
     host.appendChild(node);
     renumber(kind);
     return node;
@@ -1062,9 +1138,9 @@
     const btn = $(`[data-add="${kind}"]`); btn.disabled = host.children.length >= ROW_LIMITS[kind];
   }
   function rowsData(kind) {
-    return $$(".row-card", $("#" + ROW_HOST[kind])).map((r) => { const o = {}; $$("[data-f]", r).forEach((el) => (o[el.dataset.f] = el.value.trim())); if (kind === "pet") o._uid = r.dataset.uid; return o; });
+    return $$(".row-card", $("#" + ROW_HOST[kind])).map((r) => { const o = {}; $$("[data-f]", r).forEach((el) => (o[el.dataset.f] = el.value.trim())); if (kind === "pet") o.pid = r.dataset.pid; return o; });
   }
-  $$("[data-add]").forEach((b) => b.addEventListener("click", () => { const n = addRow(b.dataset.add); if (n) { $("input,select", n)?.focus(); saveDraft(); } }));
+  $$("[data-add]").forEach((b) => b.addEventListener("click", () => { const n = addRow(b.dataset.add); if (n) { $("input,select", n)?.focus(); } }));
   Object.keys(ROW_HOST).forEach(renumber);
 
   /* ---------- Validation ---------- */
@@ -1081,10 +1157,9 @@
     const c = ctx();
     const need = (el) => el.hasAttribute("required") || (el.dataset.reqIf === "spouse" && c.spouse);
 
-    // Generic required fields in this panel
     $$("input, select, textarea", panel).forEach((el) => {
       if (el.type === "radio" || el.type === "checkbox" || el.type === "file") return;
-      if (el.closest(".row-card") || el.closest("[style*='display:none'], [style*='display: none']")) return;
+      if (el.closest(".row-card") || hidden(el)) return;
       const v = el.value.trim();
       let bad = need(el) && !v;
       if (!bad && v) {
@@ -1093,32 +1168,25 @@
       }
       ok = setInvalid(el, bad) && ok;
     });
-    // Radios
     const radioGroups = {};
-    $$("input[type=radio]", panel).forEach((r) => { if (!r.closest("[style*='display:none'], [style*='display: none']")) radioGroups[r.name] = r.name; });
-    Object.keys(radioGroups).forEach((name) => { const el = form.elements[name]; const first = $(`input[name="${name}"]`, panel); ok = setInvalid(first, !el.value) && ok; });
-    // Repeatable rows
+    $$("input[type=radio]", panel).forEach((r) => { if (!hidden(r)) radioGroups[r.name] = r; });
+    Object.entries(radioGroups).forEach(([name, first]) => { ok = setInvalid(first, !form.elements[name].value) && ok; });
     $$(".row-card", panel).forEach((row) => $$("[data-f][required]", row).forEach((el) => (ok = setInvalid(el, !el.value.trim()) && ok)));
 
     if (id === "start") {
       const note = $("#eligibilityNote");
       const m = val("afmMembership");
-      let msg = "", cls = "";
-      if (c.type === "cession" && m && m !== "gt2y") { msg = "<strong>Please note:</strong> cession applicants must have been active members of the AFM of SA for more than two years."; cls = "warn"; }
-      else if (c.type === "rental" && m === "lt6m") { msg = "<strong>Please note:</strong> rental applicants must have been members of the AFM of SA for at least six months."; cls = "warn"; }
-      if (c.type === "cession" && c.foreign) { msg += (msg ? "<br/>" : "") + "<strong>Please note:</strong> cession applicants must be South African citizens with a valid SA ID. Foreign nationals may apply to rent."; cls = "warn"; }
-      note.style.display = msg ? "" : "none"; note.className = "banner " + (cls || "info"); note.innerHTML = msg;
-      if (msg) {
-        // Hard stop for the two absolute criteria; everything else proceeds with the warning shown.
-        if ((c.type === "cession" && (m !== "gt2y" || c.foreign)) || (c.type === "rental" && m === "lt6m")) {
-          note.innerHTML += "<br/><br/>You may still submit, but the application is unlikely to meet the criteria in Annexure A. Please contact the office if you believe your circumstances are different.";
-        }
-      }
+      let msg = "";
+      if (c.type === "cession" && m && m !== "gt2y") msg = "<strong>Please note:</strong> cession applicants must have been active members of the AFM of SA for more than two years.";
+      else if (c.type === "rental" && m === "lt6m") msg = "<strong>Please note:</strong> rental applicants must have been members of the AFM of SA for at least six months.";
+      if (c.type === "cession" && c.foreign) msg += (msg ? "<br/>" : "") + "<strong>Please note:</strong> cession applicants must be South African citizens with a valid SA ID. Foreign nationals may apply to rent.";
+      if (msg) msg += "<br/><br/>You may still submit, but the application is unlikely to meet the criteria in Annexure A. Please contact the office if you believe your circumstances are different.";
+      note.style.display = msg ? "" : "none"; note.className = "banner warn"; note.innerHTML = msg;
     }
     if (id === "applicant") {
       const idEl = $("#a_id");
       if (idEl.value.trim() && !c.foreign && !SA_ID.test(idEl.value.trim())) ok = setInvalid(idEl, true) && ok;
-      if (!(files.photo_applicant || []).length) { ok = false; $("#a_id").closest(".grid").lastElementChild.classList.add("invalid"); }
+      if (!(files.photo_applicant || []).length) { ok = false; $('[data-uploader="photo_applicant"]').closest(".field").classList.add("invalid"); }
     }
     if (id === "spouse" && !(files.photo_spouse || []).length) { ok = false; $('[data-uploader="photo_spouse"]').closest(".field").classList.add("invalid"); }
     if (id === "household") {
@@ -1129,27 +1197,22 @@
     if (id === "pets" && c.pets) {
       if (!$$("#petRows .row-card").length) { ok = false; $("[data-add=pet]").focus(); $("#stepError").textContent = "Please add at least one pet or answer No."; }
       const g = $("#petChecks"); const all = $$("input[type=checkbox]", g).every((x) => x.checked); ok = setInvalid($("input", g), !all) && ok;
-      $$("#petRows .row-card").forEach((row) => ["photo", "vaccination", "sterilisation"].forEach((k) => { const h = $(`[data-pet-uploader="${k}"]`, row); const bad = !(files[`pet_${row.dataset.uid}_${k}`] || []).length; h.closest(".field").classList.toggle("invalid", bad); if (bad) ok = false; }));
+      $$("#petRows .row-card").forEach((row) => ["photo", "vaccination", "sterilisation"].forEach((k) => { const h = $(`[data-pet-uploader="${k}"]`, row); const bad = !(files[`pet_${row.dataset.pid}_${k}`] || []).length; h.closest(".field").classList.toggle("invalid", bad); if (bad) ok = false; }));
     }
-    if (id === "motivation") {
-      const bad = !c.motivationText && !(files.motivation_letter || []).length;
-      ok = setInvalid($("#motivation"), bad) && ok;
-    }
+    if (id === "motivation") ok = setInvalid($("#motivation"), !c.motivationText && !(files.motivation_letter || []).length) && ok;
     if (id === "declarations") {
       $$(".check-group[data-group]", panel).forEach((g) => {
         const boxes = $$("input[type=checkbox]", g).filter((b) => b.closest("label").style.display !== "none");
-        const all = boxes.every((b) => b.checked); ok = setInvalid(boxes[0], !all) && ok;
+        ok = setInvalid(boxes[0], !boxes.every((b) => b.checked)) && ok;
       });
       if (c.criminalDisclosure) ok = setInvalid($("#criminalDisclosure"), !val("criminal.disclosure")) && ok;
     }
     if (id === "review") {
-      const sig = val("signature.applicant").toLowerCase().replace(/\s+/g, " ");
-      const nm = val("applicant.fullName").toLowerCase().replace(/\s+/g, " ");
-      ok = setInvalid($("#sig_name"), !sig || sig !== nm) && ok;
+      const norm = (s) => s.toLowerCase().replace(/\s+/g, " ").trim();
+      ok = setInvalid($("#sig_name"), !val("signature.applicant") || norm(val("signature.applicant")) !== norm(val("applicant.fullName"))) && ok;
       const g = $("#finalConsentGroup");
       const needAck = $("#outstandingAck").style.display !== "none";
-      const good = val("signature.confirm") && (!needAck || val("signature.outstandingAck"));
-      ok = setInvalid($("input", g), !good) && ok;
+      ok = setInvalid($("input", g), !(val("signature.confirm") && (!needAck || val("signature.outstandingAck")))) && ok;
     }
     return ok;
   }
@@ -1168,68 +1231,93 @@
     if (id === "documents") renderDocs();
     if (id === "review") renderReview();
     if (id === "declarations") { const cession = ctx().type !== "rental"; $("#cessionRulesCheck").style.display = cession ? "" : "none"; $("#cessionRulesRef").style.display = cession ? "" : "none"; }
-    if (id === "spouse" || id === "applicant") { $("#a_idAlt").textContent = ctx().foreign ? "(or passport number)" : ""; }
-    // Progress
+    if (id === "spouse" || id === "applicant") $("#a_idAlt").textContent = ctx().foreign ? "(or passport number)" : "";
     $("#progressBar").style.width = Math.round(((current + 1) / steps.length) * 100) + "%";
     $("#progressLabel").textContent = `Step ${current + 1} of ${steps.length} · ${steps[current].title}`;
     $("#stepPills").innerHTML = steps.map((s, k) => `<button type="button" data-go="${k}" class="${k === current ? "current" : k <= furthest ? "done" : ""}" ${k > furthest ? "disabled" : ""}><span class="n">${k + 1}</span>${esc(s.title)}</button>`).join("");
-    if (window.parent !== window) window.parent.postMessage({ type: "pinksterpark-application:scroll", top: $("#progress").offsetTop - 12 }, "*");
-    else window.scrollTo({ top: $("#progress").offsetTop - 12, behavior: "smooth" });
+    const top = $("#progress").offsetTop - 12;
+    if (window.parent !== window) window.parent.postMessage({ type: "pinksterpark-application:scroll", top }, "*");
+    else window.scrollTo({ top, behavior: "smooth" });
     postHeight();
   }
-  $("#stepPills").addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b && !b.disabled) showStep(+b.dataset.go); });
-  $("#backBtn").addEventListener("click", () => showStep(current - 1));
+  $("#stepPills").addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b && !b.disabled) { showStep(+b.dataset.go); saveDraftQuietly(); } });
+  $("#backBtn").addEventListener("click", () => { showStep(current - 1); saveDraftQuietly(); });
   $("#nextBtn").addEventListener("click", async () => {
     const id = activeSteps()[current].id;
+    if (uploadsInProgress()) { $("#stepError").textContent = "Please wait for your uploads to finish."; $("#stepError").classList.add("show"); return; }
     if (!validateStep(id)) { $("#stepError").classList.add("show"); $(".invalid", $(`.panel[data-step="${id}"]`))?.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
-    saveDraft();
     if (id === "review") {
-      // Re-check every earlier step in case something was edited after it was first completed.
       const steps = activeSteps();
       const bad = steps.findIndex((s) => s.id !== "review" && !validateStep(s.id));
       if (bad >= 0) { showStep(bad); $("#stepError").textContent = "Please complete the highlighted fields, then return to Review & submit."; $("#stepError").classList.add("show"); return; }
       return submit();
     }
     showStep(current + 1);
+    // Create the server-side draft after the first step so progress survives a closed tab.
+    if (!token) ensureDraft().then(() => { $("#savedNote").textContent = "Saved " + timeNow(); }).catch(() => {});
+    else saveDraftQuietly();
   });
   form.addEventListener("submit", (e) => e.preventDefault());
   form.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.tagName !== "TEXTAREA" && e.target.type !== "button") e.preventDefault(); });
 
   /* ---------- Dynamic bits ---------- */
+  function syncDynamic() {
+    $("#petSection").style.display = ctx().pets ? "" : "none";
+    $("#criminalDisclosureField").style.display = ctx().criminalDisclosure ? "" : "none";
+    $("#sigSpouseField").style.display = ctx().spouse ? "" : "none";
+    $("#motivationCount").textContent = val("motivation").length;
+  }
   form.addEventListener("change", (e) => {
     const n = e.target.name;
-    if (n === "hasPets") $("#petSection").style.display = ctx().pets ? "" : "none";
     if (n === "hasPets" && ctx().pets && !$$("#petRows .row-card").length) addRow("pet");
-    if (n === "criminal.hasDisclosure") $("#criminalDisclosureField").style.display = ctx().criminalDisclosure ? "" : "none";
     if (n === "applicant.maritalStatus" && e.target.value === "Married" && !val("hasSpouse")) form.elements.hasSpouse.value = "yes";
-    if (n === "hasSpouse") $("#sigSpouseField").style.display = ctx().spouse ? "" : "none";
-    if (n === "applicationType" || n === "afmMembership" || n === "citizenship") { $("#eligibilityNote").style.display = "none"; }
-    saveDraft();
+    if (n === "applicationType" || n === "afmMembership" || n === "citizenship") $("#eligibilityNote").style.display = "none";
+    syncDynamic();
+    saveDraftQuietly();
   });
-  form.addEventListener("input", (e) => { if (e.target.id === "motivation") $("#motivationCount").textContent = e.target.value.length; saveDraftSoon(); });
+  form.addEventListener("input", (e) => { if (e.target.id === "motivation") $("#motivationCount").textContent = e.target.value.length; });
 
-  /* ---------- Review ---------- */
-  function dl(pairs) { const rows = pairs.filter(([, v]) => v !== "" && v != null && v !== false).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v === true ? "Yes" : v)}</dd>`); return rows.length ? `<dl>${rows.join("")}</dl>` : `<p class="none">Nothing entered.</p>`; }
-  function section(title, step, body) { return `<div class="review-section"><h4>${esc(title)}<button type="button" data-edit="${step}">Edit</button></h4>${body}</div>`; }
-  function renderReview() {
+  /* ---------- Summary (used for the review step and sent to the office) ---------- */
+  function labelForKey(k) {
+    if (k === "photo_applicant") return "Photo of applicant";
+    if (k === "photo_spouse") return "Photo of spouse";
+    if (k === "motivation_letter") return "Motivation letter";
+    const m = k.match(/^pet_(\w+)_(\w+)$/);
+    if (m) { const i = $$("#petRows .row-card").findIndex((r) => r.dataset.pid === m[1]); return `Pet ${i >= 0 ? i + 1 : ""} ${m[2] === "photo" ? "photo" : m[2] === "vaccination" ? "vaccination record" : "proof of sterilisation"}`.replace("  ", " "); }
+    const d = docDefs.find((x) => x.key === k); return d ? docTitle(d) : k;
+  }
+  function summaryData() {
     const c = ctx();
     const typeLabel = { cession: "Cession (purchase)", rental: "Rental" }[c.type] || "";
     const afm = { "lt6m": "Less than 6 months", "6m-2y": "6 months to 2 years", "gt2y": "More than 2 years" }[val("afmMembership")] || "";
     const children = rowsData("child"), veh = rowsData("vehicle"), sec = rowsData("secondary"), refs = rowsData("ref"), pets = rowsData("pet");
-    const list = (arr, f) => arr.length ? `<ul>${arr.map((x) => `<li>${esc(f(x))}</li>`).join("")}</ul>` : `<p class="none">None.</p>`;
+    const rows = (pairs) => pairs.filter(([, v]) => v !== "" && v != null && v !== false).map(([k, v]) => [k, v === true ? "Yes" : String(v)]);
+    const S = [];
+    S.push({ title: "Application", step: "start", rows: rows([["Applying for", typeLabel], ["AFM of SA membership", afm], ["Congregation", val("congregation")], ["Citizenship", c.foreign ? "Foreign national" : "South African"], ["Unit number", val("unitNr")]]) });
+    S.push({ title: "Applicant", step: "applicant", rows: rows([["Full name", val("applicant.fullName")], ["ID number", val("applicant.idNumber")], ["Date of birth", val("applicant.dateOfBirth")], ["Marital status", val("applicant.maritalStatus")], ["Mobile", val("applicant.mobile")], ["Email", val("applicant.email")], ["Address", val("applicant.address")]]) });
+    if (c.spouse) S.push({ title: "Spouse", step: "spouse", rows: rows([["Full name", val("spouse.fullName")], ["ID / passport", val("spouse.idNumber")], ["Date of birth", val("spouse.dateOfBirth")], ["Mobile", val("spouse.mobile")], ["Email", val("spouse.email")]]) });
+    S.push({ title: "Household", step: "household", items: children.map((x) => `${x.name} · ${x.gender} · born ${x.dob}${x.idNumber ? " · " + x.idNumber : ""}`), rows: rows([["Total occupants", val("totalOccupants")]]), emptyText: "No children." });
+    S.push({ title: "Vehicles", step: "vehicles", items: [...veh.map((v) => `Vehicle: ${v.make} (${v.year}, ${v.colour}) · ${v.registration.toUpperCase()}`), ...sec.map((v) => `Trailer/caravan: ${v.make} (${v.year}, ${v.colour}) · ${v.registration.toUpperCase()}`)], emptyText: "None." });
+    S.push({ title: "Rental history & references", step: "history", items: refs.map((r) => `${r.name} · ${r.mobile}${r.from || r.to ? ` · ${r.from || "?"} to ${r.to || "?"}` : ""}${r.rental ? ` · R${r.rental}/month` : ""}`), rows: rows([["Comments", val("historyNote")]]), emptyText: "None." });
+    S.push({ title: "Pets", step: "pets", items: c.pets ? pets.map((p) => `${p.name} · ${p.type}${p.breed ? " (" + p.breed + ")" : ""} · ${p.sex} · ${p.size} · sterilised: ${p.sterilised} · vaccinated: ${p.vaccinated}${p.microchip ? " · chip: " + p.microchip : ""}`) : [], emptyText: "No pets." });
+    S.push({ title: "Motivation", step: "motivation", text: val("motivation"), emptyText: (files.motivation_letter || []).length ? "Motivation letter uploaded." : "" });
+    S.push({ title: "Declarations & consents", step: "declarations", rows: rows([["Applicant declaration", "Confirmed"], ["Park Rules" + (c.type === "rental" ? "" : " & Cession Rules"), "Accepted"], ["POPIA consent", "Given"], ["Credit check consent", "Given"], ["Financial disclosure", val("credit.disclosure")], ["Criminal history declaration", c.criminalDisclosure ? "Disclosure made" : "Nothing to disclose"], ["Criminal disclosure", c.criminalDisclosure ? val("criminal.disclosure") : ""], ["Behavioural risk declaration", val("behaviour.disclosure") ? "Disclosure made" : "Nothing to disclose"], ["Behavioural disclosure", val("behaviour.disclosure")]]) });
+    S.push({ title: "Signature", step: "review", rows: rows([["Signed by", val("signature.applicant")], ["Spouse", val("signature.spouse")], ["Place", val("signature.place")], ["Date", val("signature.date")]]) });
+    return S;
+  }
+  function renderReview() {
+    const S = summaryData().filter((s) => s.step !== "review");
+    const html = S.map((s) => {
+      let body = "";
+      if (s.items && s.items.length) body += `<ul>${s.items.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+      if (s.rows && s.rows.length) body += `<dl>${s.rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`;
+      if (s.text) body += `<p class="text">${esc(s.text)}</p>`;
+      if (!body) body = `<p class="none">${esc(s.emptyText || "Nothing entered.")}</p>`;
+      return `<div class="review-section"><h4>${esc(s.title)}<button type="button" data-edit="${s.step}">Edit</button></h4>${body}</div>`;
+    }).join("");
     const allFiles = Object.entries(files).filter(([, v]) => v.length);
-    let html = "";
-    html += section("Application", "start", dl([["Applying for", typeLabel], ["AFM of SA membership", afm], ["Congregation", val("congregation")], ["Citizenship", c.foreign ? "Foreign national" : "South African"], ["Unit number", val("unitNr")]]));
-    html += section("Applicant", "applicant", dl([["Full name", val("applicant.fullName")], ["ID number", val("applicant.idNumber")], ["Date of birth", val("applicant.dateOfBirth")], ["Marital status", val("applicant.maritalStatus")], ["Mobile", val("applicant.mobile")], ["Email", val("applicant.email")], ["Address", val("applicant.address")]]));
-    if (c.spouse) html += section("Spouse", "spouse", dl([["Full name", val("spouse.fullName")], ["ID / passport", val("spouse.idNumber")], ["Date of birth", val("spouse.dateOfBirth")], ["Mobile", val("spouse.mobile")], ["Email", val("spouse.email")]]));
-    html += section("Household", "household", list(children, (x) => `${x.name} · ${x.gender} · born ${x.dob}${x.idNumber ? " · " + x.idNumber : ""}`) + dl([["Total occupants", val("totalOccupants")]]));
-    html += section("Vehicles", "vehicles", list([...veh.map((v) => ({ ...v, k: "Vehicle" })), ...sec.map((v) => ({ ...v, k: "Trailer/caravan" }))], (v) => `${v.k}: ${v.make} (${v.year}, ${v.colour}) · ${v.registration.toUpperCase()}`));
-    html += section("Rental history & references", "history", list(refs, (r) => `${r.name} · ${r.mobile}${r.from || r.to ? ` · ${r.from || "?"} to ${r.to || "?"}` : ""}${r.rental ? ` · R${r.rental}/month` : ""}`) + (val("historyNote") ? dl([["Comments", val("historyNote")]]) : ""));
-    html += section("Pets", "pets", c.pets ? list(pets, (p) => `${p.name} · ${p.type}${p.breed ? " (" + p.breed + ")" : ""} · ${p.sex} · ${p.size} · sterilised: ${p.sterilised} · vaccinated: ${p.vaccinated}`) : `<p class="none">No pets.</p>`);
-    html += section("Motivation", "motivation", val("motivation") ? `<p style="font-size:0.9rem;white-space:pre-wrap">${esc(val("motivation"))}</p>` : `<p class="none">Motivation letter uploaded.</p>`);
-    html += section("Declarations & consents", "declarations", dl([["Applicant declaration", "Confirmed"], ["Park Rules" + (c.type === "rental" ? "" : " & Cession Rules"), "Accepted"], ["POPIA consent", "Given"], ["Credit check consent", "Given"], ["Criminal history declaration", c.criminalDisclosure ? "Disclosure made" : "Nothing to disclose"], ["Behavioural risk declaration", val("behaviour.disclosure") ? "Disclosure made" : "Nothing to disclose"]]));
-    html += section("Documents uploaded", "documents", allFiles.length ? `<ul>${allFiles.map(([k, v]) => `<li>${esc(labelForKey(k))}: ${v.map((f) => esc(f.name)).join(", ")}</li>`).join("")}</ul>` : `<p class="none">No documents uploaded.</p>`);
-    $("#reviewBody").innerHTML = html;
+    const docsHtml = allFiles.length ? `<ul>${allFiles.map(([k, v]) => `<li>${esc(labelForKey(k))}: ${v.map((f) => esc(f.name)).join(", ")}</li>`).join("")}</ul>` : `<p class="none">No documents uploaded.</p>`;
+    $("#reviewBody").innerHTML = html + `<div class="review-section"><h4>Documents uploaded<button type="button" data-edit="documents">Edit</button></h4>${docsHtml}</div>`;
     $$("[data-edit]", $("#reviewBody")).forEach((b) => b.addEventListener("click", () => showStep(activeSteps().findIndex((s) => s.id === b.dataset.edit))));
 
     const missing = missingRequiredDocs();
@@ -1241,105 +1329,112 @@
     const surname = (val("applicant.fullName").trim().split(/\s+/).pop() || "Surname");
     $("#payRef").textContent = `${val("unitNr") || "UnitNr"}_${surname}`;
     $("#sig_date").value = todayISO();
-    $("#sigSpouseField").style.display = c.spouse ? "" : "none";
-  }
-  function labelForKey(k) {
-    if (k === "photo_applicant") return "Photo of applicant";
-    if (k === "photo_spouse") return "Photo of spouse";
-    if (k === "motivation_letter") return "Motivation letter";
-    const m = k.match(/^pet_(\d+)_(\w+)$/);
-    if (m) { const i = $$("#petRows .row-card").findIndex((r) => r.dataset.uid === m[1]); return `Pet ${i + 1} ${m[2]}`; }
-    const d = docDefs.find((x) => x.key === k); return d ? docTitle(d) : k;
+    $("#sigSpouseField").style.display = ctx().spouse ? "" : "none";
   }
 
-  /* ---------- Payload & submit ---------- */
+  /* ---------- Payload ---------- */
   function collect() {
     const data = {};
     for (const el of form.elements) {
       if (!el.name || el.closest(".row-card")) continue;
       if (el.type === "radio") { if (el.checked) data[el.name] = el.value; else if (!(el.name in data)) data[el.name] = ""; }
       else if (el.type === "checkbox") data[el.name] = el.checked;
-      else data[el.name] = el.value.trim();
+      else if (el.type !== "file") data[el.name] = el.value.trim();
     }
-    const pets = rowsData("pet").map((p, i) => ({ ...p, files: ["photo", "vaccination", "sterilisation"].reduce((o, k) => (o[k] = (files[`pet_${p._uid}_${k}`] || []).map((f) => f.name), o), {}) }));
-    pets.forEach((p) => delete p._uid);
-    return { ...data, children: rowsData("child"), vehicles: rowsData("vehicle"), secondaryVehicles: rowsData("secondary"), references: rowsData("ref"), pets };
+    return { ...data, children: rowsData("child"), vehicles: rowsData("vehicle"), secondaryVehicles: rowsData("secondary"), references: rowsData("ref"), pets: rowsData("pet") };
   }
-  function makeRef() { const d = new Date(); const ymd = d.toISOString().slice(0, 10).replace(/-/g, ""); const r = Math.random().toString(36).slice(2, 6).toUpperCase(); return `PP-${ymd}-${r}`; }
+  function buildPayload() {
+    const fileLabels = {};
+    Object.keys(files).forEach((k) => { if (files[k].length) fileLabels[k] = labelForKey(k); });
+    return { ...collect(), progress: { current: activeSteps()[current]?.id || "start", furthest }, summary: summaryData(), fileLabels, outstandingDocuments: missingRequiredDocs(), source: location.href, savedAt: new Date().toISOString() };
+  }
+  function applyPayload(d) {
+    Object.entries(d).forEach(([k, v]) => { const el = form.elements[k]; if (!el || Array.isArray(v) || (v && typeof v === "object")) return; if (el instanceof RadioNodeList) el.value = v; else if (el.type === "checkbox") el.checked = !!v; else el.value = v; });
+    ["signature.confirm", "signature.outstandingAck"].forEach((n) => { if (form.elements[n]) form.elements[n].checked = false; });
+    (d.children || []).forEach((r) => addRow("child", r)); (d.vehicles || []).forEach((r) => addRow("vehicle", r)); (d.secondaryVehicles || []).forEach((r) => addRow("secondary", r)); (d.references || []).forEach((r) => addRow("ref", r)); (d.pets || []).forEach((r) => addRow("pet", r));
+    syncDynamic();
+  }
 
+  /* ---------- Submit ---------- */
   async function submit() {
     const btn = $("#nextBtn"), errBox = $("#submitError");
     errBox.style.display = "none";
     btn.disabled = true; btn.textContent = "Submitting…";
-    const reference = makeRef();
-    const payload = { reference, submittedAt: new Date().toISOString(), source: location.href, outstandingDocuments: missingRequiredDocs(), ...collect() };
-    const fd = new FormData();
-    fd.append("reference", reference);
-    fd.append("payload", JSON.stringify(payload));
-    Object.entries(files).forEach(([key, arr]) => arr.forEach((f) => fd.append(`files[${key}][]`, f, f.name)));
     try {
-      if (CONFIG.endpoint) {
-        const res = await fetch(CONFIG.endpoint, { method: "POST", body: fd, headers: CONFIG.headers });
-        if (!res.ok) throw new Error(`Server responded ${res.status}`);
-        let body = {}; try { body = await res.json(); } catch (_) { /* non-JSON response is fine */ }
-        finish(body.reference || reference, body.message);
-      } else {
-        console.info("[Pinksterpark application] Preview mode payload:", payload, "files:", Object.fromEntries(Object.entries(files).map(([k, v]) => [k, v.map((f) => f.name)])));
-        await new Promise((r) => setTimeout(r, 600));
-        finish(reference, "Preview mode: nothing was sent.");
-      }
+      await ensureDraft();
+      const res = await api(`/draft/${token}/submit`, { method: "POST", json: { payload: buildPayload() } });
+      forgetToken();
+      finish(res.reference, res.message);
     } catch (err) {
-      console.error(err);
       errBox.style.display = "";
-      errBox.innerHTML = `<strong>We could not send your application.</strong> Please check your connection and try again. If the problem continues, email your documents to <a href="mailto:${CONFIG.adminEmail}">${CONFIG.adminEmail}</a>.`;
+      errBox.innerHTML = `<strong>We could not send your application.</strong> ${esc(err.message)} If the problem continues, please contact <a href="mailto:${CONFIG.adminEmail}">${CONFIG.adminEmail}</a>.`;
       btn.disabled = false; btn.textContent = "Submit application";
     }
   }
   function finish(reference, message) {
     $("#doneRef").textContent = reference;
     $("#doneRefPay").textContent = $("#payRef").textContent;
-    $("#doneEmailNote").textContent = message || `A confirmation will be sent to ${val("applicant.email")}.`;
+    $("#doneEmailNote").textContent = message || "";
     $$(".panel").forEach((p) => p.classList.toggle("active", p.dataset.step === "done"));
     $("#nav").style.display = "none"; $("#progress").style.display = "none";
-    try { localStorage.removeItem(CONFIG.storageKey); } catch (_) {}
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (window.parent !== window) window.parent.postMessage({ type: "pinksterpark-application:scroll", top: 0 }, "*");
+    else window.scrollTo({ top: 0, behavior: "smooth" });
     postHeight();
   }
   $("#printBtn").addEventListener("click", () => { $$(".panel").forEach((p) => p.classList.toggle("active", p.dataset.step === "review" || p.dataset.step === "done")); window.print(); $$(".panel").forEach((p) => p.classList.toggle("active", p.dataset.step === "done")); });
-  $("#newAppBtn").addEventListener("click", () => location.reload());
+  $("#newAppBtn").addEventListener("click", () => { forgetToken(); location.replace(location.pathname + (location.search.includes("embed=1") ? "?embed=1" : "")); });
 
-  /* ---------- Draft persistence (text only; files cannot be stored) ---------- */
-  let saveTimer;
-  function saveDraftSoon() { clearTimeout(saveTimer); saveTimer = setTimeout(saveDraft, 500); }
-  function saveDraft() {
+  /* ---------- Save & continue later ---------- */
+  const dlg = $("#saveDialog");
+  function openDialog() {
+    $("#saveEmail").value = val("applicant.email");
+    $("#saveResult").style.display = "none";
+    $("#saveEmail").closest(".field").classList.remove("invalid");
+    $("#saveSend").disabled = false; $("#saveSend").textContent = "Email me the link";
+    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+  }
+  function closeDialog() { if (dlg.open) dlg.close(); else dlg.removeAttribute("open"); }
+  $("#saveLaterBtn").addEventListener("click", openDialog);
+  $("#saveClose").addEventListener("click", closeDialog);
+  $("#saveSend").addEventListener("click", async () => {
+    const email = $("#saveEmail").value.trim();
+    const bad = !EMAIL.test(email);
+    $("#saveEmail").closest(".field").classList.toggle("invalid", bad);
+    if (bad) return;
+    const btn = $("#saveSend"); btn.disabled = true; btn.textContent = "Saving…";
     try {
-      const d = collect();
-      delete d["signature.confirm"]; delete d["signature.outstandingAck"];
-      d.pets = d.pets.map((p) => { const { files: _f, ...rest } = p; return rest; });
-      localStorage.setItem(CONFIG.storageKey, JSON.stringify({ savedAt: Date.now(), current: activeSteps()[current]?.id, furthest, data: d }));
-      $("#savedNote").textContent = "Saved on this device " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    } catch (_) { /* storage unavailable (private mode etc.) */ }
-  }
-  function loadDraft() {
-    let saved; try { saved = JSON.parse(localStorage.getItem(CONFIG.storageKey) || "null"); } catch (_) { return false; }
-    if (!saved || !saved.data) return false;
-    const d = saved.data;
-    Object.entries(d).forEach(([k, v]) => { const el = form.elements[k]; if (!el || Array.isArray(v) || typeof v === "object") return; if (el instanceof RadioNodeList) el.value = v; else if (el.type === "checkbox") el.checked = !!v; else el.value = v; });
-    (d.children || []).forEach((r) => addRow("child", r)); (d.vehicles || []).forEach((r) => addRow("vehicle", r)); (d.secondaryVehicles || []).forEach((r) => addRow("secondary", r)); (d.references || []).forEach((r) => addRow("ref", r)); (d.pets || []).forEach((r) => addRow("pet", r));
-    $("#petSection").style.display = ctx().pets ? "" : "none";
-    $("#criminalDisclosureField").style.display = ctx().criminalDisclosure ? "" : "none";
-    $("#motivationCount").textContent = val("motivation").length;
-    furthest = Math.min(saved.furthest || 0, activeSteps().length - 1);
-    const idx = activeSteps().findIndex((s) => s.id === saved.current);
-    showStep(idx >= 0 ? idx : 0);
-    $("#savedNote").textContent = "Draft restored from " + new Date(saved.savedAt).toLocaleDateString();
-    return true;
-  }
-  $("#resetBtn").addEventListener("click", () => {
-    if (!confirm("Clear all saved answers and start again?")) return;
-    try { localStorage.removeItem(CONFIG.storageKey); } catch (_) {}
-    location.reload();
+      if (!val("applicant.email")) form.elements["applicant.email"].value = email;
+      const res = await saveDraft({ notify: true, email });
+      const box = $("#saveResult");
+      box.className = "banner ok";
+      box.innerHTML = (res.emailSent ? `<strong>Saved.</strong> We have emailed your link to <b>${esc(email)}</b>. You can close this page now and continue later from the link.` : `<strong>Saved.</strong> We could not send the email just now, so please copy the link below to continue later.`) + `<div class="link-box">${esc(res.resumeUrl)}</div>`;
+      box.style.display = "";
+      btn.textContent = "Sent";
+    } catch (err) {
+      const box = $("#saveResult"); box.className = "banner danger"; box.innerHTML = `<strong>Could not save.</strong> ${esc(err.message)}`; box.style.display = "";
+      btn.disabled = false; btn.textContent = "Try again";
+    }
   });
+  $("#resetBtn").addEventListener("click", () => {
+    if (!confirm("Start over? This clears your answers on this device. A saved copy stays available from any link we emailed you.")) return;
+    forgetToken();
+    location.replace(location.pathname + (location.search.includes("embed=1") ? "?embed=1" : ""));
+  });
+
+  /* ---------- Resume ---------- */
+  async function resumeDraft(t) {
+    const d = await api(`/draft/${t}`);
+    rememberToken(t);
+    applyPayload(d.payload || {});
+    (d.files || []).forEach((f) => { (files[f.key] = files[f.key] || []).push({ ...f, remote: true }); });
+    Object.values(uploaders).forEach((u) => u.render());
+    const steps = activeSteps();
+    furthest = Math.min(Math.max(0, d.payload?.progress?.furthest || 0), steps.length - 1);
+    const idx = steps.findIndex((s) => s.id === d.payload?.progress?.current);
+    showStep(idx >= 0 ? idx : furthest);
+    $("#savedNote").textContent = "Saved application restored" + (d.updated ? ` (last saved ${d.updated})` : "");
+    notice("ok", `<strong>Welcome back.</strong> Your saved application has been restored, including ${(d.files || []).length} uploaded file${(d.files || []).length === 1 ? "" : "s"}. Continue where you left off.`);
+  }
 
   /* ---------- Embedding support (iframe auto-height) ---------- */
   function postHeight() { if (window.parent === window) return; requestAnimationFrame(() => window.parent.postMessage({ type: "pinksterpark-application:height", height: document.documentElement.scrollHeight }, "*")); }
@@ -1349,9 +1444,20 @@
   if (/[?&]embed=1/.test(location.search) || window.parent !== window) document.documentElement.classList.add("embedded");
   $$("[data-max-mb]").forEach((s) => (s.textContent = CONFIG.maxFileMB));
   $$("[data-link]").forEach((a) => { if (CONFIG.links[a.dataset.link]) a.href = CONFIG.links[a.dataset.link]; });
-  if (!CONFIG.endpoint) $("#demoBanner").style.display = "";
   $("#sig_date").value = todayISO();
-  if (!loadDraft()) showStep(0);
+  (async () => {
+    const params = new URLSearchParams(location.search);
+    const fromUrl = params.get("resume");
+    const t = (fromUrl && /^[a-f0-9]{32}$/.test(fromUrl)) ? fromUrl : storedToken();
+    if (t) {
+      try { await resumeDraft(t); return; }
+      catch (err) {
+        forgetToken();
+        if (fromUrl) notice("warn", `<strong>We could not open that saved application.</strong> ${esc(err.message)} You can start a new application below.`);
+      }
+    }
+    showStep(0);
+  })();
 })();
 </script>
 </body>
