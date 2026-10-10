@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apply to live at Pinksterpark</title>
+<meta name="description" content="Online application for a cession or rental at Pinksterpark, a Christian residential community of the AFM of SA Pinkster Park Trust." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* Brand tokens match pinksterpark.co.za (Houzez theme): Plus Jakarta Sans, #2F5E99 primary. */
+  :root {
+    --brand: #2f5e99;
+    --brand-dark: #004274;
+    --brand-soft: #eaf0f8;
+    --brand-line: #c9d7ea;
+    --bg: #f7f8f9;
+    --card: #ffffff;
+    --text: #222222;
+    --muted: #6b7280;
+    --line: #e3e7ee;
+    --danger: #c0392b;
+    --danger-soft: #fdf0ee;
+    --ok: #1f8a4c;
+    --ok-soft: #eaf7ef;
+    --warn: #b7791f;
+    --warn-soft: #fff7e8;
+    --radius: 8px;
+    --shadow: 0 8px 28px rgba(34, 34, 34, 0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    padding: 24px 16px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+
+  /* Header */
+  .hero {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px 36px;
+    margin-bottom: 20px;
+    border-top: 4px solid var(--brand);
+  }
+  .hero .eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
+  .hero h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 10px; color: var(--brand-dark); }
+  .hero p { color: var(--muted); max-width: 64ch; }
+  .hero .meta { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 16px; font-size: 0.9rem; color: var(--muted); }
+  .hero .meta a { color: var(--brand); text-decoration: none; font-weight: 600; }
+  .hero .meta a:hover { text-decoration: underline; }
+
+  .banner { border-radius: var(--radius); padding: 12px 16px; font-size: 0.9rem; margin-bottom: 16px; border: 1px solid; }
+  .banner.warn { background: var(--warn-soft); border-color: #f1dcae; color: #7a5410; }
+  .banner.info { background: var(--brand-soft); border-color: var(--brand-line); color: var(--brand-dark); }
+  .banner.ok { background: var(--ok-soft); border-color: #bfe3cc; color: #14603a; }
+  .banner.danger { background: var(--danger-soft); border-color: #f2c4bd; color: #8a2619; }
+  .banner strong { font-weight: 700; }
+  .banner ul { margin: 6px 0 0 18px; }
+
+  /* Progress */
+  .progress { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 20px; }
+  .progress .bar { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+  .progress .bar > span { display: block; height: 100%; width: 0; background: var(--brand); transition: width 0.3s ease; }
+  .progress .label { font-size: 0.9rem; font-weight: 600; color: var(--brand-dark); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .progress .label .saved { font-weight: 500; color: var(--muted); font-size: 0.82rem; }
+  .steps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .steps button {
+    font: inherit; font-size: 0.78rem; font-weight: 600;
+    border: 1px solid var(--line); background: var(--bg); color: var(--muted);
+    padding: 6px 10px; border-radius: 999px; cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .steps button.done { color: var(--brand-dark); border-color: var(--brand-line); background: var(--brand-soft); }
+  .steps button.current { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .steps button:disabled { cursor: default; opacity: 0.6; }
+  .steps button .n { opacity: 0.7; margin-right: 4px; }
+
+  /* Cards / panels */
+  .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 30px 36px 34px; margin-bottom: 20px; }
+  .panel { display: none; }
+  .panel.active { display: block; animation: fade 0.25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .panel h2 { font-size: 1.35rem; font-weight: 800; color: var(--brand-dark); margin-bottom: 6px; }
+  .panel .sub { color: var(--muted); margin-bottom: 22px; font-size: 0.95rem; }
+  h3 { font-size: 1rem; font-weight: 700; margin: 26px 0 12px; color: var(--text); padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  h3.first { margin-top: 6px; }
+
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
+  .grid .span2 { grid-column: 1 / -1; }
+  .field { display: flex; flex-direction: column; }
+  label, .lbl { font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+  label.req::after, .lbl.req::after { content: " *"; color: var(--danger); }
+  input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select, textarea {
+    width: 100%; font: inherit; font-size: 0.98rem;
+    padding: 11px 13px; border: 1px solid #cfd5df; border-radius: 6px; background: #fff; color: var(--text);
+    outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  textarea { min-height: 130px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(47, 94, 153, 0.15); }
+  .hint { font-size: 0.82rem; color: var(--muted); margin-top: 5px; }
+  .hint a { color: var(--brand); }
+  .err { font-size: 0.82rem; color: var(--danger); margin-top: 5px; display: none; }
+  .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--danger); }
+  .field.invalid .err, .check-group.invalid .err, .tiles-group.invalid .err { display: block; }
+
+  /* Choice tiles (radios) */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .tile { position: relative; }
+  .tile input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .tile span.box { display: block; padding: 16px 18px; border: 2px solid var(--line); border-radius: var(--radius); background: #fff; transition: border-color 0.15s, background 0.15s; height: 100%; }
+  .tile span.box b { display: block; font-weight: 700; margin-bottom: 4px; }
+  .tile span.box small { color: var(--muted); font-size: 0.85rem; line-height: 1.4; display: block; }
+  .tile input:checked + span.box { border-color: var(--brand); background: var(--brand-soft); }
+  .tile input:focus-visible + span.box { box-shadow: 0 0 0 3px rgba(47, 94, 153, 0.25); }
+
+  /* Inline radios */
+  .radios { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 6px 0; }
+  .radios label { font-weight: 500; display: inline-flex; align-items: center; gap: 7px; margin: 0; cursor: pointer; }
+  .radios input { width: 18px; height: 18px; accent-color: var(--brand); }
+
+  /* Checkbox lists */
+  .checks { display: flex; flex-direction: column; gap: 10px; }
+  .checks label { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; font-weight: 500; font-size: 0.93rem; cursor: pointer; margin: 0; line-height: 1.5; }
+  .checks input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--brand); }
+  .consent-box { border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 18px; background: #fff; }
+  .consent-box h4 { font-size: 1rem; font-weight: 700; color: var(--brand-dark); margin-bottom: 2px; }
+  .consent-box .form-ref { font-size: 0.75rem; color: var(--muted); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
+  .consent-box details { margin: 8px 0 14px; }
+  .consent-box summary { cursor: pointer; color: var(--brand); font-weight: 600; font-size: 0.9rem; }
+  .consent-box .legal { font-size: 0.88rem; color: #444; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .consent-box .disclose { margin-top: 14px; }
+
+  /* Repeatable rows */
+  .rows { display: flex; flex-direction: column; gap: 14px; }
+  .row-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px 18px; background: #fcfcfd; }
+  .row-card .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .row-card .row-head b { font-size: 0.9rem; color: var(--brand-dark); }
+  .btn-link { font: inherit; background: none; border: none; color: var(--danger); font-weight: 600; font-size: 0.85rem; cursor: pointer; padding: 4px 6px; }
+  .btn-link:hover { text-decoration: underline; }
+  .btn-add { font: inherit; font-weight: 600; font-size: 0.9rem; margin-top: 12px; background: #fff; color: var(--brand); border: 1px dashed var(--brand); border-radius: 6px; padding: 10px 16px; cursor: pointer; }
+  .btn-add:hover { background: var(--brand-soft); }
+  .btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
+  .empty-note { font-size: 0.9rem; color: var(--muted); padding: 6px 0; }
+
+  /* Upload component */
+  .doc-list { display: flex; flex-direction: column; gap: 14px; }
+  .doc { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; background: #fff; }
+  .doc.required-missing { border-color: #f1dcae; }
+  .doc.has-files { border-color: #bfe3cc; }
+  .doc-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+  .doc-head > div:first-child { flex: 1 1 240px; min-width: 0; }
+  .doc-head .title { font-weight: 700; font-size: 0.95rem; }
+  .doc-head .desc { font-size: 0.85rem; color: var(--muted); margin-top: 3px; }
+  .doc-head .desc a { color: var(--brand); font-weight: 600; }
+  .chip { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+  .chip.req { background: var(--warn-soft); color: #7a5410; }
+  .chip.opt { background: var(--bg); color: var(--muted); }
+  .chip.ok { background: var(--ok-soft); color: #14603a; }
+  .drop { margin-top: 12px; border: 2px dashed #cfd5df; border-radius: 6px; padding: 16px; text-align: center; font-size: 0.9rem; color: var(--muted); cursor: pointer; transition: border-color 0.15s, background 0.15s; background: #fafbfc; }
+  .drop:hover, .drop.over, .drop:focus-visible { border-color: var(--brand); background: var(--brand-soft); color: var(--brand-dark); outline: none; }
+  .drop b { color: var(--brand); }
+  .drop input { display: none; }
+  .files { list-style: none; margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .files li { display: flex; align-items: center; gap: 10px; font-size: 0.86rem; background: var(--bg); border-radius: 6px; padding: 7px 10px; }
+  .files li img { width: 34px; height: 34px; object-fit: cover; border-radius: 4px; flex: none; }
+  .files li .icon { width: 34px; height: 34px; border-radius: 4px; background: var(--brand-soft); color: var(--brand-dark); display: grid; place-items: center; font-size: 0.62rem; font-weight: 800; flex: none; }
+  .files li .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .files li .size { color: var(--muted); flex: none; }
+  .files li button { font: inherit; background: none; border: none; color: var(--danger); font-weight: 700; cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 2px 6px; }
+  .upload-err { font-size: 0.82rem; color: var(--danger); margin-top: 6px; }
+  .doc-group-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 22px 0 10px; }
+  .doc-group-title:first-child { margin-top: 0; }
+
+  /* Info blocks */
+  .info-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 14px 0 4px; }
+  .info-list .item { background: var(--bg); border-radius: var(--radius); padding: 14px 16px; font-size: 0.9rem; }
+  .info-list .item b { display: block; color: var(--brand-dark); margin-bottom: 4px; }
+  ul.plain { padding-left: 20px; font-size: 0.92rem; color: #333; display: flex; flex-direction: column; gap: 6px; }
+  .bank { background: var(--brand-soft); border: 1px solid var(--brand-line); border-radius: var(--radius); padding: 16px 20px; margin-top: 8px; }
+  .bank dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; font-size: 0.93rem; }
+  .bank dt { color: var(--muted); font-weight: 600; }
+  .bank dd { font-weight: 700; color: var(--brand-dark); word-break: break-word; }
+
+  /* Review */
+  .review-section { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px; }
+  .review-section h4 { font-size: 0.95rem; font-weight: 700; color: var(--brand-dark); display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .review-section h4 button { font: inherit; font-size: 0.82rem; font-weight: 600; color: var(--brand); background: none; border: none; cursor: pointer; }
+  .review-section dl { display: grid; grid-template-columns: minmax(140px, max-content) 1fr; gap: 6px 16px; font-size: 0.9rem; }
+  .review-section dt { color: var(--muted); }
+  .review-section dd { font-weight: 600; word-break: break-word; }
+  .review-section .none { color: var(--muted); font-style: italic; font-size: 0.9rem; }
+  .review-section ul { padding-left: 18px; font-size: 0.9rem; }
+
+  /* Nav */
+  .nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+  .btn { font: inherit; font-weight: 700; font-size: 0.98rem; padding: 13px 26px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: background 0.15s, transform 0.1s, box-shadow 0.15s; }
+  .btn.primary { background: var(--brand); color: #fff; box-shadow: 0 6px 16px rgba(47, 94, 153, 0.28); }
+  .btn.primary:hover { background: var(--brand-dark); }
+  .btn.primary:disabled { opacity: 0.6; cursor: wait; box-shadow: none; }
+  .btn.ghost { background: #fff; color: var(--brand-dark); border-color: #cfd5df; }
+  .btn.ghost:hover { background: var(--bg); }
+  .btn:active { transform: translateY(1px); }
+  .nav .btn-text { font: inherit; font-size: 0.85rem; color: var(--muted); background: none; border: none; cursor: pointer; text-decoration: underline; }
+  .step-error { display: none; margin-top: 16px; }
+  .step-error.show { display: block; }
+
+  /* Success */
+  .success { text-align: center; padding: 20px 0 10px; }
+  .success .tick { width: 72px; height: 72px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; margin: 0 auto 16px; font-size: 2rem; font-weight: 800; }
+  .success h2 { color: var(--brand-dark); }
+  .success .ref { display: inline-block; margin: 14px 0; padding: 10px 18px; background: var(--brand-soft); border: 1px solid var(--brand-line); border-radius: 6px; font-weight: 800; color: var(--brand-dark); font-size: 1.1rem; letter-spacing: 0.04em; }
+  .success ol { text-align: left; max-width: 560px; margin: 16px auto 0; padding-left: 22px; font-size: 0.95rem; display: flex; flex-direction: column; gap: 8px; }
+  .success .actions { margin-top: 22px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  footer.note { text-align: center; font-size: 0.82rem; color: var(--muted); margin-top: 10px; }
+  footer.note a { color: var(--brand); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  /* Embedded in pinksterpark.co.za via <iframe src="application.html?embed=1">: the WordPress page supplies the heading and background. */
+  html.embedded body { background: transparent; padding: 4px 0 24px; }
+  html.embedded .hero, html.embedded footer.note { display: none; }
+
+  @media (max-width: 640px) {
+    body { padding: 12px 16px 60px; }
+    html.embedded body { padding: 0 0 40px; }
+    .hero, .card { padding: 22px 18px 26px; }
+    .grid { grid-template-columns: 1fr; }
+    .steps { display: none; }
+    .review-section dl { grid-template-columns: 1fr; gap: 2px 0; }
+    .review-section dd { margin-bottom: 8px; }
+    .nav .btn { flex: 1 1 45%; text-align: center; }
+    .bank dl { grid-template-columns: 1fr; gap: 2px; }
+    .bank dd { margin-bottom: 8px; }
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .hero .meta, .progress, .nav, .banner, .btn, .steps, .review-section h4 button { display: none !important; }
+    .card, .hero { box-shadow: none; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Pinksterpark · A Christian Residential Community</div>
+    <h1>Apply to live at Pinksterpark</h1>
+    <p>Application for a cession or rental at Pinksterpark. Complete the steps below and upload your supporting documents. Your answers are saved on this device as you go, so you can return later to finish.</p>
+    <div class="meta">
+      <span>Questions? <a href="mailto:admin@pinksterpark.co.za">admin@pinksterpark.co.za</a></span>
+      <span><a href="tel:+27609891144">+27 60 989 1144</a> (Mon–Fri, 9am–5pm)</span>
+    </div>
+  </header>
+
+  <div id="demoBanner" class="banner warn" style="display:none">
+    <strong>Preview mode.</strong> This form is not yet connected to the office. Submissions are shown on screen only and nothing is sent.
+  </div>
+
+  <div class="progress" id="progress">
+    <div class="bar"><span id="progressBar"></span></div>
+    <div class="label"><span id="progressLabel">Step 1 of 11</span><span class="saved" id="savedNote"></span></div>
+    <div class="steps" id="stepPills" aria-label="Application steps"></div>
+  </div>
+
+  <form id="app" class="card" novalidate autocomplete="on">
+
+    <!-- 1. BEFORE YOU START -->
+    <section class="panel" data-step="start">
+      <h2>Before you start</h2>
+      <p class="sub">Pinksterpark is a residential community of the Apostolic Faith Mission of South Africa (AFM of SA) Pinkster Park Trust. Please check that you qualify before continuing.</p>
+
+      <h3 class="first">What are you applying for?</h3>
+      <div class="tiles-group" id="appTypeGroup">
+        <div class="tiles">
+          <label class="tile"><input type="radio" name="applicationType" value="cession" />
+            <span class="box"><b>Cession (purchase)</b><small>Taking over a unit through cession. Requires active AFM of SA membership for more than two years and South African citizenship with a valid SA ID.</small></span></label>
+          <label class="tile"><input type="radio" name="applicationType" value="rental" />
+            <span class="box"><b>Rental</b><small>Renting a unit at Pinksterpark. Requires AFM of SA membership for at least six months. Foreign nationals must meet Department of Home Affairs requirements (Annexure I).</small></span></label>
+        </div>
+        <div class="err">Please choose cession or rental.</div>
+      </div>
+
+      <div class="grid" style="margin-top:20px">
+        <div class="field">
+          <label class="req" for="afmYears">How long have you been an active member of the AFM of SA?</label>
+          <select id="afmYears" name="afmMembership" required>
+            <option value="">Select…</option>
+            <option value="lt6m">Less than 6 months</option>
+            <option value="6m-2y">6 months to 2 years</option>
+            <option value="gt2y">More than 2 years</option>
+          </select>
+          <div class="err">Please select your membership period.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="congregation">Name of your local AFM congregation</label>
+          <input id="congregation" name="congregation" type="text" required placeholder="e.g. AFM Somerset West" />
+          <div class="err">Please enter your congregation.</div>
+        </div>
+        <div class="field span2">
+          <span class="lbl req">Citizenship</span>
+          <div class="radios">
+            <label><input type="radio" name="citizenship" value="sa" /> South African citizen with a valid SA ID</label>
+            <label><input type="radio" name="citizenship" value="foreign" /> Foreign national</label>
+          </div>
+          <div class="err">Please select your citizenship.</div>
+        </div>
+        <div class="field span2">
+          <label for="unitNr">Unit number you are applying for (if known)</label>
+          <input id="unitNr" name="unitNr" type="text" placeholder="e.g. A123" />
+          <div class="hint">Used as part of your payment reference. Leave blank if you have not been allocated a unit yet.</div>
+        </div>
+      </div>
+
+      <div id="eligibilityNote" class="banner" style="display:none;margin-top:18px"></div>
+
+      <h3>What you will need</h3>
+      <p class="hint" style="margin-bottom:10px">Have scans or clear photos ready (PDF, JPG or PNG, up to <span data-max-mb></span> MB each). You can also submit now and email outstanding documents afterwards.</p>
+      <ul class="plain">
+        <li>Church Board confirmation of AFM of SA membership (Form A2, completed by your church board)</li>
+        <li>ID documents of both spouses and your marriage certificate, if applicable</li>
+        <li>Current proof of address (FICA) and proof of income (last three months' bank statements)</li>
+        <li>Vehicle registration papers and proof of vehicle insurance, if you have vehicles</li>
+        <li>Health certificate and medical disclosure (Pinkster Park does not have medical facilities)</li>
+        <li>Police clearance certificate, where relevant to community safety</li>
+        <li>Pet vaccination and sterilisation certificates, if you have pets</li>
+        <li>A recent photograph of each applicant and a motivation letter</li>
+        <li>Signed consent and declaration forms (A3 to A6) and signed acceptance of the Park Rules and Cession Rules</li>
+        <li>Proof of payment of the non-refundable R350 administration and credit check fee</li>
+      </ul>
+    </section>
+
+    <!-- 2. APPLICANT -->
+    <section class="panel" data-step="applicant">
+      <h2>Applicant details</h2>
+      <p class="sub">Your details as they appear on your identity document.</p>
+      <div class="grid">
+        <div class="field span2">
+          <label class="req" for="a_name">Full name and surname</label>
+          <input id="a_name" name="applicant.fullName" type="text" required autocomplete="name" />
+          <div class="err">Please enter your full name.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="a_id">ID number <span id="a_idAlt" style="font-weight:500;color:var(--muted)"></span></label>
+          <input id="a_id" name="applicant.idNumber" type="text" inputmode="numeric" required />
+          <div class="err" id="a_idErr">Please enter a valid 13-digit SA ID number.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="a_dob">Date of birth</label>
+          <input id="a_dob" name="applicant.dateOfBirth" type="date" required autocomplete="bday" />
+          <div class="err">Please enter your date of birth.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="a_marital">Marital status</label>
+          <select id="a_marital" name="applicant.maritalStatus" required>
+            <option value="">Select…</option>
+            <option>Single</option>
+            <option>Married</option>
+            <option>Widowed</option>
+            <option>Divorced</option>
+          </select>
+          <div class="err">Please select your marital status.</div>
+        </div>
+        <div class="field">
+          <span class="lbl req">Is a spouse included in this application?</span>
+          <div class="radios">
+            <label><input type="radio" name="hasSpouse" value="yes" /> Yes</label>
+            <label><input type="radio" name="hasSpouse" value="no" /> No</label>
+          </div>
+          <div class="err">Please answer yes or no.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="a_mobile">Mobile number</label>
+          <input id="a_mobile" name="applicant.mobile" type="tel" required autocomplete="tel" placeholder="e.g. 082 123 4567" />
+          <div class="err">Please enter a valid mobile number.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="a_email">Email address</label>
+          <input id="a_email" name="applicant.email" type="email" required autocomplete="email" />
+          <div class="err">Please enter a valid email address.</div>
+          <div class="hint">We will send your application reference to this address.</div>
+        </div>
+        <div class="field span2">
+          <label class="req" for="a_address">Current residential address</label>
+          <textarea id="a_address" name="applicant.address" required style="min-height:80px" autocomplete="street-address"></textarea>
+          <div class="err">Please enter your current address.</div>
+        </div>
+        <div class="field span2 photo-wrap">
+          <span class="lbl req">Recent photograph of applicant</span>
+          <div class="hint" style="margin:-2px 0 6px">A clear, recent head-and-shoulders photo for identification and internal records.</div>
+          <div data-uploader="photo_applicant" data-accept="image/*" data-required="1"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SPOUSE -->
+    <section class="panel" data-step="spouse">
+      <h2>Spouse details</h2>
+      <p class="sub">Details of your spouse as they appear on their identity document.</p>
+      <div class="grid">
+        <div class="field span2">
+          <label class="req" for="s_name">Full name and surname</label>
+          <input id="s_name" name="spouse.fullName" type="text" data-req-if="spouse" />
+          <div class="err">Please enter your spouse's full name.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="s_id">ID / passport number</label>
+          <input id="s_id" name="spouse.idNumber" type="text" data-req-if="spouse" />
+          <div class="err">Please enter an ID or passport number.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="s_dob">Date of birth</label>
+          <input id="s_dob" name="spouse.dateOfBirth" type="date" data-req-if="spouse" />
+          <div class="err">Please enter a date of birth.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="s_mobile">Mobile number</label>
+          <input id="s_mobile" name="spouse.mobile" type="tel" data-req-if="spouse" />
+          <div class="err">Please enter a valid mobile number.</div>
+        </div>
+        <div class="field">
+          <label for="s_email">Email address</label>
+          <input id="s_email" name="spouse.email" type="email" />
+          <div class="err">Please enter a valid email address.</div>
+        </div>
+        <div class="field span2 photo-wrap">
+          <span class="lbl req">Recent photograph of spouse</span>
+          <div data-uploader="photo_spouse" data-accept="image/*" data-required="spouse"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. HOUSEHOLD -->
+    <section class="panel" data-step="household">
+      <h2>Household</h2>
+      <p class="sub">Everyone who will live in the unit with you.</p>
+
+      <h3 class="first">Children (if applicable)</h3>
+      <div class="rows" id="childRows"></div>
+      <div class="empty-note" data-empty-for="childRows">No children added.</div>
+      <button type="button" class="btn-add" data-add="child">+ Add a child</button>
+
+      <h3>Occupancy</h3>
+      <div class="grid">
+        <div class="field">
+          <label class="req" for="occupants">Total number of people expected to live in the unit</label>
+          <input id="occupants" name="totalOccupants" type="number" min="1" max="20" required />
+          <div class="err">Please enter the number of occupants.</div>
+          <div class="hint">Including yourself, your spouse and any children.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. VEHICLES -->
+    <section class="panel" data-step="vehicles">
+      <h2>Vehicles</h2>
+      <p class="sub">Vehicles you intend to keep at Pinksterpark, if vehicles are allowed on site for your unit. Registration papers and proof of insurance are uploaded in the Documents step.</p>
+
+      <h3 class="first">Primary vehicles</h3>
+      <div class="rows" id="vehicleRows"></div>
+      <div class="empty-note" data-empty-for="vehicleRows">No vehicles added.</div>
+      <button type="button" class="btn-add" data-add="vehicle">+ Add a vehicle</button>
+
+      <h3>Secondary vehicles (trailers, caravans, etc.)</h3>
+      <div class="rows" id="secondaryRows"></div>
+      <div class="empty-note" data-empty-for="secondaryRows">No trailers or caravans added.</div>
+      <button type="button" class="btn-add" data-add="secondary">+ Add a trailer or caravan</button>
+    </section>
+
+    <!-- 6. RENTAL HISTORY -->
+    <section class="panel" data-step="history">
+      <h2>Rental history &amp; references</h2>
+      <p class="sub">Previous landlords or agents we may contact. If you have never rented, you may add a character reference instead and note this in the comment field.</p>
+      <div class="rows" id="refRows"></div>
+      <div class="empty-note" data-empty-for="refRows">No references added yet.</div>
+      <button type="button" class="btn-add" data-add="ref">+ Add a reference</button>
+      <div class="field" style="margin-top:20px">
+        <label for="historyNote">Comments on your rental history (optional)</label>
+        <textarea id="historyNote" name="historyNote" style="min-height:80px" placeholder="e.g. Owned my own home for the past 15 years."></textarea>
+      </div>
+    </section>
+
+    <!-- 7. PETS -->
+    <section class="panel" data-step="pets">
+      <h2>Pets</h2>
+      <p class="sub">Permission to keep a pet is subject to written approval by Management. Unsterilised pets are not allowed at Pinksterpark.</p>
+      <div class="field">
+        <span class="lbl req">Do you intend to keep any pets at Pinksterpark?</span>
+        <div class="radios">
+          <label><input type="radio" name="hasPets" value="yes" /> Yes</label>
+          <label><input type="radio" name="hasPets" value="no" /> No</label>
+        </div>
+        <div class="err">Please answer yes or no.</div>
+      </div>
+
+      <div id="petSection" style="display:none">
+        <h3>Your pets</h3>
+        <div class="rows" id="petRows"></div>
+        <button type="button" class="btn-add" data-add="pet">+ Add a pet</button>
+
+        <h3>Health, control &amp; suitability</h3>
+        <div class="check-group" id="petChecks">
+          <div class="checks">
+            <label><input type="checkbox" name="pet.declare.healthy" /> The pet is healthy and is not known to be dangerous or aggressive.</label>
+            <label><input type="checkbox" name="pet.declare.control" /> The pet will be kept under proper control and in hygienic conditions at all times.</label>
+            <label><input type="checkbox" name="pet.declare.roam" /> The pet will not be allowed to roam freely on common areas or elsewhere in the Park.</label>
+            <label><input type="checkbox" name="pet.declare.waste" /> All waste will be removed promptly and disposed of properly.</label>
+            <label><input type="checkbox" name="pet.declare.nuisance" /> The pet has not caused persistent barking, nuisance, offensive odours, fouling or similar disturbance at a previous residence.</label>
+          </div>
+          <div class="err">Please confirm each statement to apply for a pet.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. MOTIVATION -->
+    <section class="panel" data-step="motivation">
+      <h2>Reason for your application</h2>
+      <p class="sub">Tell us why you wish to live at Pinksterpark. You may write your motivation here, upload a signed letter, or both.</p>
+      <div class="field">
+        <label for="motivation">Motivation</label>
+        <textarea id="motivation" name="motivation" style="min-height:180px" placeholder="Why would you like to live at Pinksterpark? How did you hear about us? What would you contribute to the community?"></textarea>
+        <div class="err">Please write a short motivation (at least 100 characters) or upload a motivation letter.</div>
+        <div class="hint"><span id="motivationCount">0</span> characters</div>
+      </div>
+      <div class="field" style="margin-top:18px">
+        <span class="lbl">Motivation letter (optional if you wrote your motivation above)</span>
+        <div data-uploader="motivation_letter" data-accept=".pdf,.doc,.docx,image/*"></div>
+      </div>
+    </section>
+
+    <!-- 9. DECLARATIONS & CONSENTS -->
+    <section class="panel" data-step="declarations">
+      <h2>Declarations &amp; consents</h2>
+      <p class="sub">Please read each section carefully. The consents below are also required as signed forms, which you will upload in the next step. You can download the forms from the <a href="https://pinksterpark.co.za/documents/forms/" target="_blank" rel="noopener" data-link="forms">Forms page</a>.</p>
+
+      <div class="consent-box check-group" data-group="declaration">
+        <h4>Applicant declaration</h4>
+        <div class="form-ref">Form A1 · Application form</div>
+        <div class="checks">
+          <label><input type="checkbox" name="declare.true" /> I confirm that all the information provided is true and correct.</label>
+          <label><input type="checkbox" name="declare.checks" /> I authorise Pinksterpark to conduct credit and background checks and agree to the processing of my personal data in accordance with POPIA (Protection of Personal Information Act).</label>
+          <label><input type="checkbox" name="declare.jesus" /> I believe in Jesus Christ, who sacrificed Himself on the cross for my sins.</label>
+          <label><input type="checkbox" name="declare.bible" /> I believe that the Bible is divinely inspired and the Word of God.</label>
+          <label><input type="checkbox" name="declare.values" /> I confirm that I will respect the Biblical values, rules and community guidelines of Pinksterpark.</label>
+          <label><input type="checkbox" name="declare.contribute" /> I will do what I can to help make Pinksterpark a wonderful place to live.</label>
+          <label><input type="checkbox" name="declare.afm" /> I am a member of the Apostolic Faith Mission of South Africa.</label>
+        </div>
+        <div class="err">Please confirm each statement.</div>
+      </div>
+
+      <div class="consent-box check-group" data-group="rules">
+        <h4>Park Rules and Cession Rules</h4>
+        <div class="form-ref">Annexure G · Park Rules <span id="cessionRulesRef">· Annexure B · Cession Rules</span></div>
+        <div class="checks">
+          <label><input type="checkbox" name="rules.park" /> I have read, understand and accept the <a href="https://pinksterpark.co.za/documents/annexures/" target="_blank" rel="noopener" data-link="parkRules">Park Rules</a>.</label>
+          <label id="cessionRulesCheck"><input type="checkbox" name="rules.cession" /> I have read, understand and accept the <a href="https://pinksterpark.co.za/documents/annexures/" target="_blank" rel="noopener" data-link="cessionRules">Cession Rules</a>.</label>
+        </div>
+        <div class="err">Please confirm that you accept the rules.</div>
+      </div>
+
+      <div class="consent-box check-group" data-group="popia">
+        <h4>Consent to process personal information</h4>
+        <div class="form-ref">Form A3 · POPIA</div>
+        <details>
+          <summary>Read the full consent</summary>
+          <div class="legal">
+            <p>I/we hereby voluntarily consent to the collection, recording, storage, updating, use, disclosure and other lawful processing of my/our personal information by the Apostolic Faith Mission of South Africa Pinkster Park Trust, its duly authorised trustees, management, employees, professional advisers and service providers, to the extent reasonably necessary for the lawful administration of Pinksterpark and the assessment or administration of my/our application.</p>
+            <p>The personal information processed may include identity particulars, contact details, marital information, address details, financial information, vehicle details, occupancy details, supporting application documents and correspondence reasonably required for the application and management process. Certain limited special personal information, or information relating to criminal matters, may be processed only where lawful, necessary and relevant to community safety, legal compliance, risk management, or the proper exercise of rights and obligations within Pinksterpark.</p>
+            <p>Personal information may be processed for: verifying identity and eligibility; assessing applications; conducting affordability, credit or background checks where lawfully authorised; administering occupation, cession, leasing and community records; facilitating communication; enforcing the Park Rules, Cession Rules and related governance documents; safeguarding persons and property; complying with legal obligations; and resolving disputes or complaints.</p>
+            <p>Personal information may be shared, where reasonably necessary and lawful, with trustees, management, professional advisers, credit bureaux, attorneys, auditors, insurers, security providers, maintenance contractors, regulatory bodies or other third parties who require the information for a legitimate and lawful purpose connected to the administration of Pinksterpark. It shall be stored securely and retained only for so long as reasonably necessary or as required by law.</p>
+            <p>I/we may request access to personal information held about me/us, request correction of inaccurate information, object to certain processing where legally justified, or lodge a complaint with the Information Regulator.</p>
+          </div>
+        </details>
+        <div class="checks">
+          <label><input type="checkbox" name="popia.consent" /> I/we give this consent freely and confirm that the information supplied is true and correct to the best of my/our knowledge.</label>
+        </div>
+        <div class="err">Please give your consent to continue.</div>
+      </div>
+
+      <div class="consent-box check-group" data-group="credit">
+        <h4>Consent for credit check and debt review enquiry</h4>
+        <div class="form-ref">Form A4</div>
+        <details>
+          <summary>Read the full consent</summary>
+          <div class="legal">
+            <p>I/we hereby voluntarily and expressly authorise the Pinkster Park Trust, Park Management, and any duly authorised agent or service provider acting on their behalf, to obtain and assess my/our credit profile and related information for the purpose of considering and administering my/our application. This includes enquiries with any registered credit bureau, credit provider, debt counsellor, employer, bank or other lawful source of relevant financial information, insofar as reasonably necessary to evaluate affordability, payment behaviour, existing credit obligations, debt review status, administration, insolvency, sequestration or any materially relevant financial risk.</p>
+            <p>This consent extends to a formal credit check and a debt review enquiry. Information obtained will be treated as confidential, processed in accordance with applicable law, and used only for lawful purposes connected with the application and its administration. Any material misrepresentation or omission may constitute grounds for refusal of the application.</p>
+          </div>
+        </details>
+        <div class="checks">
+          <label><input type="checkbox" name="credit.consent" /> I/we consent to a formal credit check and debt review enquiry.</label>
+          <label><input type="checkbox" name="credit.notUnderReview" /> I am / we are not currently under debt review, unless disclosed below.</label>
+          <label><input type="checkbox" name="credit.disclosed" /> I/we have disclosed all material financial obligations relevant to this application.</label>
+          <label><input type="checkbox" name="credit.valid" /> I/we understand that this consent remains valid for the duration of the application process.</label>
+        </div>
+        <div class="err">Please confirm each statement.</div>
+        <div class="field disclose">
+          <label for="creditDisclosure">Financial disclosure (only if applicable)</label>
+          <textarea id="creditDisclosure" name="credit.disclosure" style="min-height:70px" placeholder="e.g. Currently under debt review since March 2025 with …"></textarea>
+        </div>
+      </div>
+
+      <div class="consent-box check-group" data-group="criminal">
+        <h4>Criminal history, pending matters and protection orders</h4>
+        <div class="form-ref">Form A5</div>
+        <details>
+          <summary>Read the full consent and declaration</summary>
+          <div class="legal">
+            <p>I/we acknowledge that the Trust, Park Management and any duly authorised agent may request and consider information reasonably relevant to community safety concerning criminal history, pending criminal matters and any protection order applicable to me/us, to the extent permitted by law. I/we voluntarily declare whether I am / we are currently subject to any criminal charge, prosecution, pending criminal matter, conviction, or court order for protection, domestic violence, harassment, intimidation or similar relief, where such matter may reasonably affect communal residence, safety, security or peaceful occupation within the Park.</p>
+            <p>I/we consent to lawful enquiries to verify the information disclosed, including inspection of supporting documents, sworn declarations, court documents or police clearance certificates where required. Information will be treated as confidential and used only for lawful purposes connected with the application and community safety.</p>
+          </div>
+        </details>
+        <div class="checks">
+          <label><input type="checkbox" name="criminal.consent" /> I/we give this consent and confirm the declaration above.</label>
+          <label><input type="checkbox" name="criminal.noConviction" /> I am / we are not aware of any undisclosed criminal conviction relevant to community safety.</label>
+          <label><input type="checkbox" name="criminal.noPending" /> I am / we are not currently the subject of any pending criminal matter, unless disclosed below.</label>
+          <label><input type="checkbox" name="criminal.noOrder" /> I am / we are not currently subject to any protection order or similar court order, unless disclosed below.</label>
+        </div>
+        <div class="err">Please confirm each statement.</div>
+        <div class="field disclose">
+          <span class="lbl req">Do you have anything to disclose under this section?</span>
+          <div class="radios">
+            <label><input type="radio" name="criminal.hasDisclosure" value="no" /> No</label>
+            <label><input type="radio" name="criminal.hasDisclosure" value="yes" /> Yes, details below</label>
+          </div>
+        </div>
+        <div class="field" id="criminalDisclosureField" style="display:none">
+          <label class="req" for="criminalDisclosure">Particulars of the matter</label>
+          <textarea id="criminalDisclosure" name="criminal.disclosure" style="min-height:90px"></textarea>
+          <div class="err">Please provide brief particulars.</div>
+          <div class="hint">Please also upload supporting documents and a police clearance certificate in the Documents step.</div>
+        </div>
+      </div>
+
+      <div class="consent-box check-group" data-group="behaviour">
+        <h4>Alcohol abuse, substance abuse or behavioural risks</h4>
+        <div class="form-ref">Form A6</div>
+        <details>
+          <summary>Read the full declaration</summary>
+          <div class="legal">
+            <p>I/we declare that the Trust, Park Management and any duly authorised person may request and consider information reasonably relevant to community safety, peaceful occupation and responsible communal living concerning alcohol abuse, substance abuse or behavioural risks, to the extent permitted by law. I/we declare whether I am / we are presently aware of any alcohol abuse, substance abuse, dependency, recurring behavioural problem, violent conduct, threatening conduct or other pattern of behaviour that may reasonably pose a risk to other residents, staff, visitors, property or the orderly management of the Park.</p>
+            <p>This declaration addresses current or recent risks relevant to communal residence and does not require disclosure of irrelevant private medical information. Information will be treated confidentially and used only for lawful purposes connected with the application and community safety.</p>
+          </div>
+        </details>
+        <div class="checks">
+          <label><input type="checkbox" name="behaviour.noRisk" /> I am / we are not aware of any undisclosed alcohol abuse, substance abuse or behavioural conditions that currently present a material risk to community safety or peaceful occupation.</label>
+          <label><input type="checkbox" name="behaviour.noConduct" /> I am / we are not currently engaged in conduct involving violence, threats, intimidation, serious disorder or repeated disruption, unless disclosed below.</label>
+          <label><input type="checkbox" name="behaviour.comply" /> I/we undertake to comply with all Park Rules, safety requirements and lawful management directives relating to peaceful communal living.</label>
+        </div>
+        <div class="err">Please confirm each statement.</div>
+        <div class="field disclose">
+          <label for="behaviourDisclosure">Disclosure (only if applicable)</label>
+          <textarea id="behaviourDisclosure" name="behaviour.disclosure" style="min-height:70px" placeholder="Brief particulars and present circumstances."></textarea>
+        </div>
+      </div>
+
+      <div class="consent-box check-group" data-group="medical">
+        <h4>Medical facilities</h4>
+        <div class="form-ref">Important notice</div>
+        <div class="checks">
+          <label><input type="checkbox" name="medical.ack" /> I understand that Pinkster Park does not have medical facilities and that a health certificate and medical disclosure form part of my application.</label>
+        </div>
+        <div class="err">Please acknowledge this notice.</div>
+      </div>
+    </section>
+
+    <!-- 10. DOCUMENTS -->
+    <section class="panel" data-step="documents">
+      <h2>Supporting documents</h2>
+      <p class="sub">Upload clear scans or photos (PDF, JPG or PNG, up to <span data-max-mb></span> MB each). Items marked <span class="chip req">Required</span> are needed before an interview can be scheduled. If you do not have everything yet, you can still submit and email the rest to <a href="mailto:admin@pinksterpark.co.za">admin@pinksterpark.co.za</a> with your reference number.</p>
+      <div class="banner info" style="margin-bottom:18px">
+        <strong>Your uploads are kept only while this page is open.</strong> Typed answers are saved on this device, but files cannot be. Please complete the upload step and submit in one sitting.
+      </div>
+      <div id="docList" class="doc-list"></div>
+    </section>
+
+    <!-- 11. REVIEW -->
+    <section class="panel" data-step="review">
+      <h2>Review &amp; submit</h2>
+      <p class="sub">Please check your answers. Use <em>Edit</em> to go back to any section.</p>
+      <div id="reviewBody"></div>
+
+      <div id="missingDocs" class="banner warn" style="display:none"></div>
+
+      <h3>Application fee</h3>
+      <p class="hint" style="margin-bottom:8px">A non-refundable administration and credit check fee of <strong>R350.00</strong> is required to process this application. Please pay by EFT and upload your proof of payment in the Documents step, or email it to <a href="mailto:wilma@agspaarl.co.za">wilma@agspaarl.co.za</a>.</p>
+      <div class="bank">
+        <dl>
+          <dt>Bank</dt><dd>FNB (First National Bank)</dd>
+          <dt>Account number</dt><dd>53751120263</dd>
+          <dt>Branch code</dt><dd>250655</dd>
+          <dt>Amount</dt><dd>R 350.00</dd>
+          <dt>Reference</dt><dd id="payRef">UnitNr_Surname</dd>
+        </dl>
+      </div>
+
+      <h3>Signature</h3>
+      <p class="hint" style="margin-bottom:12px">I declare that the information provided is true and correct. I understand that false information may lead to the rejection of this application or cancellation of any subsequent agreement.</p>
+      <div class="grid">
+        <div class="field">
+          <label class="req" for="sig_name">Type your full name as your signature</label>
+          <input id="sig_name" name="signature.applicant" type="text" required />
+          <div class="err">Please type your full name exactly as entered in the applicant details.</div>
+        </div>
+        <div class="field" id="sigSpouseField">
+          <label class="req" for="sig_spouse">Spouse: type full name as signature</label>
+          <input id="sig_spouse" name="signature.spouse" type="text" data-req-if="spouse" />
+          <div class="err">Please type your spouse's full name.</div>
+        </div>
+        <div class="field">
+          <label class="req" for="sig_place">Place</label>
+          <input id="sig_place" name="signature.place" type="text" required placeholder="e.g. Somerset West" />
+          <div class="err">Please enter the place of signing.</div>
+        </div>
+        <div class="field">
+          <label for="sig_date">Date</label>
+          <input id="sig_date" name="signature.date" type="date" readonly />
+        </div>
+        <div class="field span2 check-group" id="finalConsentGroup">
+          <div class="checks">
+            <label><input type="checkbox" name="signature.confirm" /> I confirm that I am the applicant named above and that submitting this form constitutes my electronic signature.</label>
+            <label id="outstandingAck" style="display:none"><input type="checkbox" name="signature.outstandingAck" /> I understand that my application will only be processed, and an interview scheduled, once all outstanding documents have been received. I will email the outstanding documents to admin@pinksterpark.co.za quoting my reference number.</label>
+          </div>
+          <div class="err">Please tick the confirmation(s) above.</div>
+        </div>
+      </div>
+      <div id="submitError" class="banner danger" style="display:none;margin-top:18px"></div>
+    </section>
+
+    <!-- SUCCESS -->
+    <section class="panel" data-step="done">
+      <div class="success">
+        <div class="tick">✓</div>
+        <h2>Thank you, your application has been received</h2>
+        <p class="hint" style="font-size:0.95rem">Please keep your reference number for all correspondence.</p>
+        <div class="ref" id="doneRef">PP-00000000-0000</div>
+        <p class="hint" id="doneEmailNote"></p>
+        <ol>
+          <li>Pay the <strong>R350</strong> administration and credit check fee (if you have not already) using the reference <strong id="doneRefPay"></strong>, and email the proof of payment to wilma@agspaarl.co.za.</li>
+          <li>Email any outstanding documents to admin@pinksterpark.co.za, quoting your reference number.</li>
+          <li>Once all documents have been received and the criteria confirmed, Park Management will contact you to schedule an interview.</li>
+        </ol>
+        <div class="actions">
+          <button type="button" class="btn ghost" id="printBtn">Print / save a copy</button>
+          <button type="button" class="btn ghost" id="newAppBtn">Start a new application</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="stepError" class="banner danger step-error">Please complete the highlighted fields before continuing.</div>
+
+    <div class="nav" id="nav">
+      <button type="button" class="btn ghost" id="backBtn">Back</button>
+      <button type="button" class="btn-text" id="resetBtn">Clear saved answers</button>
+      <button type="button" class="btn primary" id="nextBtn">Continue</button>
+    </div>
+  </form>
+
+  <footer class="note">AFM of SA Pinkster Park Trust · C/O N2 Highway &amp; Mondeor Road, Helderberg Rural, Cape Town, 7135 · <a href="https://pinksterpark.co.za" target="_blank" rel="noopener">pinksterpark.co.za</a></footer>
+</div>
+
+<!-- Row templates -->
+<template id="tpl-child">
+  <div class="row-card">
+    <div class="row-head"><b>Child <span class="idx"></span></b><button type="button" class="btn-link" data-remove>Remove</button></div>
+    <div class="grid">
+      <div class="field"><label class="req">Name &amp; surname</label><input type="text" data-f="name" required /><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Gender</label><select data-f="gender" required><option value="">Select…</option><option>Male</option><option>Female</option></select><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Date of birth</label><input type="date" data-f="dob" required /><div class="err">Required.</div></div>
+      <div class="field"><label>ID number</label><input type="text" inputmode="numeric" data-f="idNumber" /></div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-vehicle">
+  <div class="row-card">
+    <div class="row-head"><b><span class="kind">Vehicle</span> <span class="idx"></span></b><button type="button" class="btn-link" data-remove>Remove</button></div>
+    <div class="grid">
+      <div class="field"><label class="req">Make &amp; model</label><input type="text" data-f="make" required placeholder="e.g. Toyota Corolla" /><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Year model</label><input type="number" data-f="year" min="1950" max="2030" required /><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Colour</label><input type="text" data-f="colour" required /><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Registration number</label><input type="text" data-f="registration" required style="text-transform:uppercase" /><div class="err">Required.</div></div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-ref">
+  <div class="row-card">
+    <div class="row-head"><b>Reference <span class="idx"></span></b><button type="button" class="btn-link" data-remove>Remove</button></div>
+    <div class="grid">
+      <div class="field"><label class="req">Name &amp; surname</label><input type="text" data-f="name" required /><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Mobile number</label><input type="tel" data-f="mobile" required /><div class="err">Required.</div></div>
+      <div class="field"><label>From</label><input type="date" data-f="from" /></div>
+      <div class="field"><label>To</label><input type="date" data-f="to" /></div>
+      <div class="field span2"><label>Monthly rental (R)</label><input type="number" data-f="rental" min="0" step="1" /></div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-pet">
+  <div class="row-card">
+    <div class="row-head"><b>Pet <span class="idx"></span></b><button type="button" class="btn-link" data-remove>Remove</button></div>
+    <div class="grid">
+      <div class="field"><label class="req">Type of animal</label><select data-f="type" required><option value="">Select…</option><option>Dog</option><option>Cat</option><option>Bird</option><option>Other</option></select><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Name of pet</label><input type="text" data-f="name" required /><div class="err">Required.</div></div>
+      <div class="field"><label>Breed</label><input type="text" data-f="breed" /></div>
+      <div class="field"><label>Age</label><input type="text" data-f="age" placeholder="e.g. 4 years" /></div>
+      <div class="field"><label class="req">Sex</label><select data-f="sex" required><option value="">Select…</option><option>Male</option><option>Female</option></select><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Approximate size / weight</label><select data-f="size" required><option value="">Select…</option><option>Small (under 10 kg)</option><option>Medium (10–25 kg)</option><option>Large (over 25 kg)</option></select><div class="err">Required.</div></div>
+      <div class="field"><label class="req">Sterilised</label><select data-f="sterilised" required><option value="">Select…</option><option>Yes</option><option>No</option></select><div class="err">Required.</div><div class="hint pet-steril-warn" style="color:var(--danger);display:none">Unsterilised pets will not be allowed at Pinksterpark.</div></div>
+      <div class="field"><label class="req">Vaccinations up to date</label><select data-f="vaccinated" required><option value="">Select…</option><option>Yes</option><option>No</option></select><div class="err">Required.</div></div>
+      <div class="field span2"><label>Registration / microchip details</label><input type="text" data-f="microchip" /></div>
+      <div class="field"><span class="lbl req">Photo of pet</span><div data-pet-uploader="photo" data-accept="image/*"></div></div>
+      <div class="field"><span class="lbl req">Vaccination record / vet certificate</span><div data-pet-uploader="vaccination" data-accept=".pdf,image/*"></div></div>
+      <div class="field span2"><span class="lbl req">Proof of sterilisation</span><div data-pet-uploader="sterilisation" data-accept=".pdf,image/*"></div></div>
+    </div>
+  </div>
+</template>
+
+<script>
+(() => {
+  "use strict";
+
+  /* =========================================================================
+   * CONFIGURATION — the only part that needs editing when wiring this page
+   * into pinksterpark.co.za. See APPLICATION-INTEGRATION.md.
+   * ========================================================================= */
+  const CONFIG = {
+    // Where the completed application is POSTed as multipart/form-data.
+    // Leave empty for preview mode (nothing is sent; a banner says so).
+    endpoint: "",
+    // Optional extra headers for the endpoint (e.g. an API key or WP nonce).
+    headers: {},
+    adminEmail: "admin@pinksterpark.co.za",
+    paymentEmail: "wilma@agspaarl.co.za",
+    maxFileMB: 10,
+    maxFilesPerDoc: 6,
+    acceptDefault: ".pdf,.jpg,.jpeg,.png,.heic,.webp,.doc,.docx",
+    // Download links for the forms/annexures referenced on the page.
+    links: {
+      forms: "https://pinksterpark.co.za/documents/forms/",
+      annexures: "https://pinksterpark.co.za/documents/annexures/",
+      parkRules: "https://pinksterpark.co.za/documents/annexures/",
+      cessionRules: "https://pinksterpark.co.za/documents/annexures/",
+      annexureI: "https://pinksterpark.co.za/documents/annexures/",
+      formA2: "https://pinksterpark.co.za/documents/forms/",
+      formA3: "https://pinksterpark.co.za/documents/forms/",
+      formA4: "https://pinksterpark.co.za/documents/forms/",
+      formA5: "https://pinksterpark.co.za/documents/forms/",
+      formA6: "https://pinksterpark.co.za/documents/forms/",
+      formA8: "https://pinksterpark.co.za/documents/forms/"
+    },
+    storageKey: "pinksterpark-application-draft-v1"
+  };
+
+  /* ---------- Helpers ---------- */
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const form = $("#app");
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmtBytes = (b) => b > 1048576 ? (b / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB";
+  const todayISO = () => new Date().toISOString().slice(0, 10);
+  const val = (name) => { const el = form.elements[name]; if (!el) return ""; if (el instanceof RadioNodeList) return el.value; return el.type === "checkbox" ? el.checked : el.value.trim(); };
+
+  /* ---------- Steps ---------- */
+  const STEPS = [
+    { id: "start", title: "Before you start" },
+    { id: "applicant", title: "Applicant" },
+    { id: "spouse", title: "Spouse", when: () => ctx().spouse },
+    { id: "household", title: "Household" },
+    { id: "vehicles", title: "Vehicles" },
+    { id: "history", title: "Rental history" },
+    { id: "pets", title: "Pets" },
+    { id: "motivation", title: "Motivation" },
+    { id: "declarations", title: "Declarations" },
+    { id: "documents", title: "Documents" },
+    { id: "review", title: "Review & submit" }
+  ];
+  let current = 0;
+  let furthest = 0;
+
+  function ctx() {
+    return {
+      type: val("applicationType"),
+      spouse: val("hasSpouse") === "yes",
+      foreign: val("citizenship") === "foreign",
+      pets: val("hasPets") === "yes",
+      vehicles: $$("#vehicleRows .row-card, #secondaryRows .row-card").length > 0,
+      criminalDisclosure: val("criminal.hasDisclosure") === "yes",
+      motivationText: val("motivation").length >= 100
+    };
+  }
+  const activeSteps = () => STEPS.filter((s) => !s.when || s.when());
+
+  /* ---------- Uploader component ---------- */
+  const files = {}; // key -> File[]
+  const uploaders = {}; // key -> {render}
+
+  function makeUploader(host, key, opts = {}) {
+    const accept = opts.accept || CONFIG.acceptDefault;
+    const multiple = opts.multiple !== false;
+    files[key] = files[key] || [];
+    host.classList.add("uploader");
+    host.innerHTML = `
+      <div class="drop" tabindex="0" role="button" aria-label="Upload file">
+        <span><b>Choose ${multiple ? "files" : "a file"}</b> or drag &amp; drop here</span>
+        <input type="file" accept="${esc(accept)}" ${multiple ? "multiple" : ""} />
+      </div>
+      <ul class="files"></ul>
+      <div class="upload-err" hidden></div>`;
+    const drop = $(".drop", host), input = $("input", host), list = $(".files", host), err = $(".upload-err", host);
+
+    const render = () => {
+      list.innerHTML = files[key].map((f, i) => {
+        const isImg = f.type.startsWith("image/");
+        const thumb = isImg ? `<img alt="" src="${URL.createObjectURL(f)}" />` : `<span class="icon">${esc((f.name.split(".").pop() || "FILE").toUpperCase().slice(0, 4))}</span>`;
+        return `<li>${thumb}<span class="name" title="${esc(f.name)}">${esc(f.name)}</span><span class="size">${fmtBytes(f.size)}</span><button type="button" aria-label="Remove ${esc(f.name)}" data-i="${i}">×</button></li>`;
+      }).join("");
+      host.dispatchEvent(new CustomEvent("files-changed", { bubbles: true }));
+    };
+    const add = (incoming) => {
+      const problems = [];
+      for (const f of incoming) {
+        if (f.size > CONFIG.maxFileMB * 1048576) { problems.push(`${f.name} is larger than ${CONFIG.maxFileMB} MB.`); continue; }
+        if (files[key].some((x) => x.name === f.name && x.size === f.size)) continue;
+        if (!multiple) files[key] = [];
+        if (files[key].length >= CONFIG.maxFilesPerDoc) { problems.push(`You can upload at most ${CONFIG.maxFilesPerDoc} files here.`); break; }
+        files[key].push(f);
+      }
+      err.hidden = problems.length === 0; err.textContent = problems.join(" ");
+      render();
+    };
+    drop.addEventListener("click", () => input.click());
+    drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.click(); } });
+    input.addEventListener("change", () => { add(Array.from(input.files)); input.value = ""; });
+    ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+    ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+    drop.addEventListener("drop", (e) => add(Array.from(e.dataTransfer.files)));
+    list.addEventListener("click", (e) => { const b = e.target.closest("button[data-i]"); if (!b) return; files[key].splice(+b.dataset.i, 1); render(); });
+    uploaders[key] = { host, render };
+    render();
+    return uploaders[key];
+  }
+  $$("[data-uploader]").forEach((h) => makeUploader(h, h.dataset.uploader, { accept: h.dataset.accept, multiple: !h.dataset.accept?.startsWith("image") }));
+
+  /* ---------- Document requirements (Annexure A + Form A1 checklist) ---------- */
+  const L = CONFIG.links;
+  const DOCS = [
+    { group: "Membership & identity" },
+    { key: "church_confirmation", title: "Church Board confirmation of AFM of SA membership (Form A2)",
+      desc: () => `Completed and signed by your church board, confirming ${ctx().type === "rental" ? "at least six months'" : "two or more years'"} continuous membership and good standing. <a href="${L.formA2}" target="_blank" rel="noopener">Download Form A2</a>.`, required: () => true },
+    { key: "id_applicant", title: () => ctx().foreign ? "Passport of applicant" : "ID document of applicant", desc: () => ctx().foreign ? "Certified copy of your passport (bio page)." : "Copy of your green ID book or both sides of your smart ID card.", required: () => true },
+    { key: "foreign_permit", title: "Valid visa / residence permit and DHA documents", desc: () => `Foreign nationals must comply with all Department of Home Affairs requirements. See <a href="${L.annexureI}" target="_blank" rel="noopener">Annexure I</a>.`, show: () => ctx().foreign, required: () => true },
+    { key: "id_spouse", title: "ID document / passport of spouse", desc: "Copy of your spouse's ID document or passport.", show: () => ctx().spouse, required: () => true },
+    { key: "marriage_certificate", title: "Marriage certificate", desc: "Copy of your marriage certificate.", show: () => ctx().spouse || val("applicant.maritalStatus") === "Married", required: () => true },
+
+    { group: "Address, income & affordability" },
+    { key: "proof_of_address", title: "Current proof of address (FICA)", desc: "Municipal account, bank statement or similar, not older than three months.", required: () => true },
+    { key: "proof_of_income", title: "Proof of income", desc: "Your last three months' bank statements. Payslips or a pension statement may be added.", required: () => true, multiple: true },
+
+    { group: "Vehicles" },
+    { key: "vehicle_registration", title: "Vehicle registration papers", desc: "Registration certificate or licence disc for each vehicle, trailer or caravan listed.", show: () => ctx().vehicles, required: () => true, multiple: true },
+    { key: "vehicle_insurance", title: "Proof of vehicle insurance", desc: "Insurance schedule or confirmation letter for each vehicle.", show: () => ctx().vehicles, required: () => true, multiple: true },
+
+    { group: "Health & safety" },
+    { key: "health_certificate", title: "Health certificate and medical disclosure", desc: "Pinkster Park does not have medical facilities. A recent certificate from your doctor with any relevant medical disclosure.", required: () => true },
+    { key: "police_clearance", title: "Police clearance certificate", desc: () => ctx().criminalDisclosure ? "Required because a matter was disclosed in the declarations step. Please also attach court documents or sworn declarations where relevant." : "Issued by the SAPS Criminal Record Centre. Management may require this before your interview.", required: () => ctx().criminalDisclosure },
+
+    { group: "Signed forms" },
+    { key: "signed_rules", title: () => ctx().type === "rental" ? "Signed acceptance of the Park Rules" : "Signed acceptance of the Park Rules and Cession Rules", desc: () => `Sign the acceptance page of the <a href="${L.parkRules}" target="_blank" rel="noopener">Park Rules</a>${ctx().type === "rental" ? "" : ` and the <a href="${L.cessionRules}" target="_blank" rel="noopener">Cession Rules</a>`} and upload the signed page(s).`, required: () => true, multiple: true },
+    { key: "signed_a3", title: "Signed consent to process personal information (Form A3)", desc: () => `Signed by applicant, spouse (if applicable) and a witness. <a href="${L.formA3}" target="_blank" rel="noopener">Download Form A3</a>.`, required: () => true },
+    { key: "signed_a4", title: "Signed consent for credit check and debt review (Form A4)", desc: () => `<a href="${L.formA4}" target="_blank" rel="noopener">Download Form A4</a>.`, required: () => true },
+    { key: "signed_a5", title: "Signed criminal history declaration (Form A5)", desc: () => `<a href="${L.formA5}" target="_blank" rel="noopener">Download Form A5</a>.`, required: () => true },
+    { key: "signed_a6", title: "Signed alcohol, substance abuse and behaviour declaration (Form A6)", desc: () => `<a href="${L.formA6}" target="_blank" rel="noopener">Download Form A6</a>.`, required: () => true },
+
+    { group: "Payment & other" },
+    { key: "proof_of_payment", title: "Proof of payment of the R350 application fee", desc: "FNB, account 53751120263, branch 250655, reference UnitNr_Surname. You may also email it to " + CONFIG.paymentEmail + ".", required: () => true },
+    { key: "other", title: "Any other supporting documents", desc: "Anything else you would like us to consider, e.g. a reference letter from your pastor.", required: () => false, multiple: true }
+  ];
+  const docDefs = DOCS.filter((d) => d.key);
+  const call = (v) => typeof v === "function" ? v() : v;
+  const docVisible = (d) => !d.show || d.show();
+  const docRequired = (d) => docVisible(d) && !!call(d.required);
+  const docTitle = (d) => call(d.title);
+
+  function renderDocs() {
+    const list = $("#docList");
+    // Preserve uploader hosts between renders so files/listeners survive.
+    const existing = {};
+    $$("[data-doc-host]", list).forEach((h) => (existing[h.dataset.docHost] = h));
+    list.innerHTML = "";
+    DOCS.forEach((d) => {
+      if (d.group) { const t = document.createElement("div"); t.className = "doc-group-title"; t.textContent = d.group; t.dataset.group = "1"; list.appendChild(t); return; }
+      if (!docVisible(d)) return;
+      const card = document.createElement("div");
+      card.className = "doc";
+      card.dataset.key = d.key;
+      card.innerHTML = `<div class="doc-head"><div><div class="title">${esc(docTitle(d))}</div><div class="desc">${call(d.desc) || ""}</div></div><span class="chip"></span></div>`;
+      let host = existing[d.key];
+      if (!host) { host = document.createElement("div"); host.dataset.docHost = d.key; makeUploader(host, d.key, { multiple: d.multiple !== false }); }
+      card.appendChild(host);
+      list.appendChild(card);
+    });
+    // Hide empty group titles
+    $$(".doc-group-title", list).forEach((t) => { let n = t.nextElementSibling; t.style.display = n && !n.dataset.group ? "" : "none"; });
+    updateDocStates();
+  }
+  function updateDocStates() {
+    $$("#docList .doc").forEach((card) => {
+      const d = docDefs.find((x) => x.key === card.dataset.key);
+      const n = (files[d.key] || []).length;
+      const chip = $(".chip", card);
+      card.classList.toggle("has-files", n > 0);
+      card.classList.toggle("required-missing", n === 0 && docRequired(d));
+      chip.className = "chip " + (n > 0 ? "ok" : docRequired(d) ? "req" : "opt");
+      chip.textContent = n > 0 ? `${n} file${n > 1 ? "s" : ""} added` : docRequired(d) ? "Required" : "Optional";
+    });
+  }
+  function missingRequiredDocs() {
+    const out = docDefs.filter((d) => docRequired(d) && !(files[d.key] || []).length).map(docTitle);
+    if (!(files.photo_applicant || []).length) out.unshift("Photograph of applicant");
+    if (ctx().spouse && !(files.photo_spouse || []).length) out.unshift("Photograph of spouse");
+    if (!ctx().motivationText && !(files.motivation_letter || []).length) out.push("Motivation letter (or written motivation)");
+    if (ctx().pets) $$("#petRows .row-card").forEach((row, i) => {
+      ["photo", "vaccination", "sterilisation"].forEach((k) => { if (!(files[`pet_${row.dataset.uid}_${k}`] || []).length) out.push(`Pet ${i + 1}: ${k === "photo" ? "photo" : k === "vaccination" ? "vaccination record" : "proof of sterilisation"}`); });
+    });
+    return out;
+  }
+  document.addEventListener("files-changed", updateDocStates);
+
+  /* ---------- Repeatable rows ---------- */
+  const ROW_LIMITS = { child: 8, vehicle: 4, secondary: 4, ref: 4, pet: 4 };
+  const ROW_HOST = { child: "childRows", vehicle: "vehicleRows", secondary: "secondaryRows", ref: "refRows", pet: "petRows" };
+  let uid = 0;
+  function addRow(kind, data = {}) {
+    const host = $("#" + ROW_HOST[kind]);
+    if (host.children.length >= ROW_LIMITS[kind]) return null;
+    const tpl = $("#tpl-" + (kind === "secondary" ? "vehicle" : kind));
+    const node = tpl.content.firstElementChild.cloneNode(true);
+    node.dataset.kind = kind;
+    node.dataset.uid = String(++uid);
+    if (kind === "secondary") $(".kind", node).textContent = "Trailer / caravan";
+    $$("[data-f]", node).forEach((el) => { if (data[el.dataset.f] != null) el.value = data[el.dataset.f]; });
+    $$("[data-pet-uploader]", node).forEach((h) => makeUploader(h, `pet_${node.dataset.uid}_${h.dataset.petUploader}`, { accept: h.dataset.accept, multiple: false }));
+    $("[data-remove]", node).addEventListener("click", () => { Object.keys(files).filter((k) => k.startsWith(`pet_${node.dataset.uid}_`)).forEach((k) => delete files[k]); node.remove(); renumber(kind); saveDraft(); });
+    if (kind === "pet") { const st = $('[data-f="sterilised"]', node); const warn = $(".pet-steril-warn", node); st.addEventListener("change", () => (warn.style.display = st.value === "No" ? "block" : "none")); }
+    host.appendChild(node);
+    renumber(kind);
+    return node;
+  }
+  function renumber(kind) {
+    const host = $("#" + ROW_HOST[kind]);
+    $$(".row-card", host).forEach((r, i) => ($(".idx", r).textContent = i + 1));
+    const empty = $(`[data-empty-for="${ROW_HOST[kind]}"]`); if (empty) empty.style.display = host.children.length ? "none" : "";
+    const btn = $(`[data-add="${kind}"]`); btn.disabled = host.children.length >= ROW_LIMITS[kind];
+  }
+  function rowsData(kind) {
+    return $$(".row-card", $("#" + ROW_HOST[kind])).map((r) => { const o = {}; $$("[data-f]", r).forEach((el) => (o[el.dataset.f] = el.value.trim())); if (kind === "pet") o._uid = r.dataset.uid; return o; });
+  }
+  $$("[data-add]").forEach((b) => b.addEventListener("click", () => { const n = addRow(b.dataset.add); if (n) { $("input,select", n)?.focus(); saveDraft(); } }));
+  Object.keys(ROW_HOST).forEach(renumber);
+
+  /* ---------- Validation ---------- */
+  const SA_ID = /^\d{13}$/;
+  const PHONE = /^\+?[\d\s()-]{9,16}$/;
+  const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function setInvalid(el, bad) { const f = el.closest(".field, .check-group, .tiles-group"); if (f) f.classList.toggle("invalid", bad); return !bad; }
+  function clearInvalid(root) { $$(".invalid", root).forEach((x) => x.classList.remove("invalid")); }
+
+  function validateStep(id) {
+    const panel = $(`.panel[data-step="${id}"]`);
+    clearInvalid(panel);
+    let ok = true;
+    const c = ctx();
+    const need = (el) => el.hasAttribute("required") || (el.dataset.reqIf === "spouse" && c.spouse);
+
+    // Generic required fields in this panel
+    $$("input, select, textarea", panel).forEach((el) => {
+      if (el.type === "radio" || el.type === "checkbox" || el.type === "file") return;
+      if (el.closest(".row-card") || el.closest("[style*='display:none'], [style*='display: none']")) return;
+      const v = el.value.trim();
+      let bad = need(el) && !v;
+      if (!bad && v) {
+        if (el.type === "email" && !EMAIL.test(v)) bad = true;
+        if (el.type === "tel" && !PHONE.test(v)) bad = true;
+      }
+      ok = setInvalid(el, bad) && ok;
+    });
+    // Radios
+    const radioGroups = {};
+    $$("input[type=radio]", panel).forEach((r) => { if (!r.closest("[style*='display:none'], [style*='display: none']")) radioGroups[r.name] = r.name; });
+    Object.keys(radioGroups).forEach((name) => { const el = form.elements[name]; const first = $(`input[name="${name}"]`, panel); ok = setInvalid(first, !el.value) && ok; });
+    // Repeatable rows
+    $$(".row-card", panel).forEach((row) => $$("[data-f][required]", row).forEach((el) => (ok = setInvalid(el, !el.value.trim()) && ok)));
+
+    if (id === "start") {
+      const note = $("#eligibilityNote");
+      const m = val("afmMembership");
+      let msg = "", cls = "";
+      if (c.type === "cession" && m && m !== "gt2y") { msg = "<strong>Please note:</strong> cession applicants must have been active members of the AFM of SA for more than two years."; cls = "warn"; }
+      else if (c.type === "rental" && m === "lt6m") { msg = "<strong>Please note:</strong> rental applicants must have been members of the AFM of SA for at least six months."; cls = "warn"; }
+      if (c.type === "cession" && c.foreign) { msg += (msg ? "<br/>" : "") + "<strong>Please note:</strong> cession applicants must be South African citizens with a valid SA ID. Foreign nationals may apply to rent."; cls = "warn"; }
+      note.style.display = msg ? "" : "none"; note.className = "banner " + (cls || "info"); note.innerHTML = msg;
+      if (msg) {
+        // Hard stop for the two absolute criteria; everything else proceeds with the warning shown.
+        if ((c.type === "cession" && (m !== "gt2y" || c.foreign)) || (c.type === "rental" && m === "lt6m")) {
+          note.innerHTML += "<br/><br/>You may still submit, but the application is unlikely to meet the criteria in Annexure A. Please contact the office if you believe your circumstances are different.";
+        }
+      }
+    }
+    if (id === "applicant") {
+      const idEl = $("#a_id");
+      if (idEl.value.trim() && !c.foreign && !SA_ID.test(idEl.value.trim())) ok = setInvalid(idEl, true) && ok;
+      if (!(files.photo_applicant || []).length) { ok = false; $("#a_id").closest(".grid").lastElementChild.classList.add("invalid"); }
+    }
+    if (id === "spouse" && !(files.photo_spouse || []).length) { ok = false; $('[data-uploader="photo_spouse"]').closest(".field").classList.add("invalid"); }
+    if (id === "household") {
+      const n = +val("totalOccupants");
+      const min = 1 + (c.spouse ? 1 : 0) + rowsData("child").length;
+      if (n && n < min) { ok = setInvalid($("#occupants"), true); $("#occupants").closest(".field").querySelector(".err").textContent = `This should be at least ${min} based on the people you listed.`; }
+    }
+    if (id === "pets" && c.pets) {
+      if (!$$("#petRows .row-card").length) { ok = false; $("[data-add=pet]").focus(); $("#stepError").textContent = "Please add at least one pet or answer No."; }
+      const g = $("#petChecks"); const all = $$("input[type=checkbox]", g).every((x) => x.checked); ok = setInvalid($("input", g), !all) && ok;
+      $$("#petRows .row-card").forEach((row) => ["photo", "vaccination", "sterilisation"].forEach((k) => { const h = $(`[data-pet-uploader="${k}"]`, row); const bad = !(files[`pet_${row.dataset.uid}_${k}`] || []).length; h.closest(".field").classList.toggle("invalid", bad); if (bad) ok = false; }));
+    }
+    if (id === "motivation") {
+      const bad = !c.motivationText && !(files.motivation_letter || []).length;
+      ok = setInvalid($("#motivation"), bad) && ok;
+    }
+    if (id === "declarations") {
+      $$(".check-group[data-group]", panel).forEach((g) => {
+        const boxes = $$("input[type=checkbox]", g).filter((b) => b.closest("label").style.display !== "none");
+        const all = boxes.every((b) => b.checked); ok = setInvalid(boxes[0], !all) && ok;
+      });
+      if (c.criminalDisclosure) ok = setInvalid($("#criminalDisclosure"), !val("criminal.disclosure")) && ok;
+    }
+    if (id === "review") {
+      const sig = val("signature.applicant").toLowerCase().replace(/\s+/g, " ");
+      const nm = val("applicant.fullName").toLowerCase().replace(/\s+/g, " ");
+      ok = setInvalid($("#sig_name"), !sig || sig !== nm) && ok;
+      const g = $("#finalConsentGroup");
+      const needAck = $("#outstandingAck").style.display !== "none";
+      const good = val("signature.confirm") && (!needAck || val("signature.outstandingAck"));
+      ok = setInvalid($("input", g), !good) && ok;
+    }
+    return ok;
+  }
+
+  /* ---------- Navigation ---------- */
+  function showStep(i) {
+    const steps = activeSteps();
+    current = Math.max(0, Math.min(i, steps.length - 1));
+    furthest = Math.max(furthest, current);
+    const id = steps[current].id;
+    $$(".panel").forEach((p) => p.classList.toggle("active", p.dataset.step === id));
+    $("#stepError").classList.remove("show");
+    $("#stepError").textContent = "Please complete the highlighted fields before continuing.";
+    $("#backBtn").style.visibility = current === 0 ? "hidden" : "visible";
+    $("#nextBtn").textContent = id === "review" ? "Submit application" : "Continue";
+    if (id === "documents") renderDocs();
+    if (id === "review") renderReview();
+    if (id === "declarations") { const cession = ctx().type !== "rental"; $("#cessionRulesCheck").style.display = cession ? "" : "none"; $("#cessionRulesRef").style.display = cession ? "" : "none"; }
+    if (id === "spouse" || id === "applicant") { $("#a_idAlt").textContent = ctx().foreign ? "(or passport number)" : ""; }
+    // Progress
+    $("#progressBar").style.width = Math.round(((current + 1) / steps.length) * 100) + "%";
+    $("#progressLabel").textContent = `Step ${current + 1} of ${steps.length} · ${steps[current].title}`;
+    $("#stepPills").innerHTML = steps.map((s, k) => `<button type="button" data-go="${k}" class="${k === current ? "current" : k <= furthest ? "done" : ""}" ${k > furthest ? "disabled" : ""}><span class="n">${k + 1}</span>${esc(s.title)}</button>`).join("");
+    window.scrollTo({ top: $("#progress").offsetTop - 12, behavior: "smooth" });
+    postHeight();
+  }
+  $("#stepPills").addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b && !b.disabled) showStep(+b.dataset.go); });
+  $("#backBtn").addEventListener("click", () => showStep(current - 1));
+  $("#nextBtn").addEventListener("click", async () => {
+    const id = activeSteps()[current].id;
+    if (!validateStep(id)) { $("#stepError").classList.add("show"); $(".invalid", $(`.panel[data-step="${id}"]`))?.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+    saveDraft();
+    if (id === "review") {
+      // Re-check every earlier step in case something was edited after it was first completed.
+      const steps = activeSteps();
+      const bad = steps.findIndex((s) => s.id !== "review" && !validateStep(s.id));
+      if (bad >= 0) { showStep(bad); $("#stepError").textContent = "Please complete the highlighted fields, then return to Review & submit."; $("#stepError").classList.add("show"); return; }
+      return submit();
+    }
+    showStep(current + 1);
+  });
+  form.addEventListener("submit", (e) => e.preventDefault());
+  form.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.tagName !== "TEXTAREA" && e.target.type !== "button") e.preventDefault(); });
+
+  /* ---------- Dynamic bits ---------- */
+  form.addEventListener("change", (e) => {
+    const n = e.target.name;
+    if (n === "hasPets") $("#petSection").style.display = ctx().pets ? "" : "none";
+    if (n === "hasPets" && ctx().pets && !$$("#petRows .row-card").length) addRow("pet");
+    if (n === "criminal.hasDisclosure") $("#criminalDisclosureField").style.display = ctx().criminalDisclosure ? "" : "none";
+    if (n === "applicant.maritalStatus" && e.target.value === "Married" && !val("hasSpouse")) form.elements.hasSpouse.value = "yes";
+    if (n === "hasSpouse") $("#sigSpouseField").style.display = ctx().spouse ? "" : "none";
+    if (n === "applicationType" || n === "afmMembership" || n === "citizenship") { $("#eligibilityNote").style.display = "none"; }
+    saveDraft();
+  });
+  form.addEventListener("input", (e) => { if (e.target.id === "motivation") $("#motivationCount").textContent = e.target.value.length; saveDraftSoon(); });
+
+  /* ---------- Review ---------- */
+  function dl(pairs) { const rows = pairs.filter(([, v]) => v !== "" && v != null && v !== false).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v === true ? "Yes" : v)}</dd>`); return rows.length ? `<dl>${rows.join("")}</dl>` : `<p class="none">Nothing entered.</p>`; }
+  function section(title, step, body) { return `<div class="review-section"><h4>${esc(title)}<button type="button" data-edit="${step}">Edit</button></h4>${body}</div>`; }
+  function renderReview() {
+    const c = ctx();
+    const typeLabel = { cession: "Cession (purchase)", rental: "Rental" }[c.type] || "";
+    const afm = { "lt6m": "Less than 6 months", "6m-2y": "6 months to 2 years", "gt2y": "More than 2 years" }[val("afmMembership")] || "";
+    const children = rowsData("child"), veh = rowsData("vehicle"), sec = rowsData("secondary"), refs = rowsData("ref"), pets = rowsData("pet");
+    const list = (arr, f) => arr.length ? `<ul>${arr.map((x) => `<li>${esc(f(x))}</li>`).join("")}</ul>` : `<p class="none">None.</p>`;
+    const allFiles = Object.entries(files).filter(([, v]) => v.length);
+    let html = "";
+    html += section("Application", "start", dl([["Applying for", typeLabel], ["AFM of SA membership", afm], ["Congregation", val("congregation")], ["Citizenship", c.foreign ? "Foreign national" : "South African"], ["Unit number", val("unitNr")]]));
+    html += section("Applicant", "applicant", dl([["Full name", val("applicant.fullName")], ["ID number", val("applicant.idNumber")], ["Date of birth", val("applicant.dateOfBirth")], ["Marital status", val("applicant.maritalStatus")], ["Mobile", val("applicant.mobile")], ["Email", val("applicant.email")], ["Address", val("applicant.address")]]));
+    if (c.spouse) html += section("Spouse", "spouse", dl([["Full name", val("spouse.fullName")], ["ID / passport", val("spouse.idNumber")], ["Date of birth", val("spouse.dateOfBirth")], ["Mobile", val("spouse.mobile")], ["Email", val("spouse.email")]]));
+    html += section("Household", "household", list(children, (x) => `${x.name} · ${x.gender} · born ${x.dob}${x.idNumber ? " · " + x.idNumber : ""}`) + dl([["Total occupants", val("totalOccupants")]]));
+    html += section("Vehicles", "vehicles", list([...veh.map((v) => ({ ...v, k: "Vehicle" })), ...sec.map((v) => ({ ...v, k: "Trailer/caravan" }))], (v) => `${v.k}: ${v.make} (${v.year}, ${v.colour}) · ${v.registration.toUpperCase()}`));
+    html += section("Rental history & references", "history", list(refs, (r) => `${r.name} · ${r.mobile}${r.from || r.to ? ` · ${r.from || "?"} to ${r.to || "?"}` : ""}${r.rental ? ` · R${r.rental}/month` : ""}`) + (val("historyNote") ? dl([["Comments", val("historyNote")]]) : ""));
+    html += section("Pets", "pets", c.pets ? list(pets, (p) => `${p.name} · ${p.type}${p.breed ? " (" + p.breed + ")" : ""} · ${p.sex} · ${p.size} · sterilised: ${p.sterilised} · vaccinated: ${p.vaccinated}`) : `<p class="none">No pets.</p>`);
+    html += section("Motivation", "motivation", val("motivation") ? `<p style="font-size:0.9rem;white-space:pre-wrap">${esc(val("motivation"))}</p>` : `<p class="none">Motivation letter uploaded.</p>`);
+    html += section("Declarations & consents", "declarations", dl([["Applicant declaration", "Confirmed"], ["Park Rules" + (c.type === "rental" ? "" : " & Cession Rules"), "Accepted"], ["POPIA consent", "Given"], ["Credit check consent", "Given"], ["Criminal history declaration", c.criminalDisclosure ? "Disclosure made" : "Nothing to disclose"], ["Behavioural risk declaration", val("behaviour.disclosure") ? "Disclosure made" : "Nothing to disclose"]]));
+    html += section("Documents uploaded", "documents", allFiles.length ? `<ul>${allFiles.map(([k, v]) => `<li>${esc(labelForKey(k))}: ${v.map((f) => esc(f.name)).join(", ")}</li>`).join("")}</ul>` : `<p class="none">No documents uploaded.</p>`);
+    $("#reviewBody").innerHTML = html;
+    $$("[data-edit]", $("#reviewBody")).forEach((b) => b.addEventListener("click", () => showStep(activeSteps().findIndex((s) => s.id === b.dataset.edit))));
+
+    const missing = missingRequiredDocs();
+    const box = $("#missingDocs");
+    box.style.display = missing.length ? "" : "none";
+    box.innerHTML = missing.length ? `<strong>Outstanding required documents (${missing.length}):</strong><ul>${missing.map((m) => `<li>${esc(m)}</li>`).join("")}</ul>` : "";
+    $("#outstandingAck").style.display = missing.length ? "" : "none";
+
+    const surname = (val("applicant.fullName").trim().split(/\s+/).pop() || "Surname");
+    $("#payRef").textContent = `${val("unitNr") || "UnitNr"}_${surname}`;
+    $("#sig_date").value = todayISO();
+    $("#sigSpouseField").style.display = c.spouse ? "" : "none";
+  }
+  function labelForKey(k) {
+    if (k === "photo_applicant") return "Photo of applicant";
+    if (k === "photo_spouse") return "Photo of spouse";
+    if (k === "motivation_letter") return "Motivation letter";
+    const m = k.match(/^pet_(\d+)_(\w+)$/);
+    if (m) { const i = $$("#petRows .row-card").findIndex((r) => r.dataset.uid === m[1]); return `Pet ${i + 1} ${m[2]}`; }
+    const d = docDefs.find((x) => x.key === k); return d ? docTitle(d) : k;
+  }
+
+  /* ---------- Payload & submit ---------- */
+  function collect() {
+    const data = {};
+    for (const el of form.elements) {
+      if (!el.name || el.closest(".row-card")) continue;
+      if (el.type === "radio") { if (el.checked) data[el.name] = el.value; else if (!(el.name in data)) data[el.name] = ""; }
+      else if (el.type === "checkbox") data[el.name] = el.checked;
+      else data[el.name] = el.value.trim();
+    }
+    const pets = rowsData("pet").map((p, i) => ({ ...p, files: ["photo", "vaccination", "sterilisation"].reduce((o, k) => (o[k] = (files[`pet_${p._uid}_${k}`] || []).map((f) => f.name), o), {}) }));
+    pets.forEach((p) => delete p._uid);
+    return { ...data, children: rowsData("child"), vehicles: rowsData("vehicle"), secondaryVehicles: rowsData("secondary"), references: rowsData("ref"), pets };
+  }
+  function makeRef() { const d = new Date(); const ymd = d.toISOString().slice(0, 10).replace(/-/g, ""); const r = Math.random().toString(36).slice(2, 6).toUpperCase(); return `PP-${ymd}-${r}`; }
+
+  async function submit() {
+    const btn = $("#nextBtn"), errBox = $("#submitError");
+    errBox.style.display = "none";
+    btn.disabled = true; btn.textContent = "Submitting…";
+    const reference = makeRef();
+    const payload = { reference, submittedAt: new Date().toISOString(), source: location.href, outstandingDocuments: missingRequiredDocs(), ...collect() };
+    const fd = new FormData();
+    fd.append("reference", reference);
+    fd.append("payload", JSON.stringify(payload));
+    Object.entries(files).forEach(([key, arr]) => arr.forEach((f) => fd.append(`files[${key}][]`, f, f.name)));
+    try {
+      if (CONFIG.endpoint) {
+        const res = await fetch(CONFIG.endpoint, { method: "POST", body: fd, headers: CONFIG.headers });
+        if (!res.ok) throw new Error(`Server responded ${res.status}`);
+        let body = {}; try { body = await res.json(); } catch (_) { /* non-JSON response is fine */ }
+        finish(body.reference || reference, body.message);
+      } else {
+        console.info("[Pinksterpark application] Preview mode payload:", payload, "files:", Object.fromEntries(Object.entries(files).map(([k, v]) => [k, v.map((f) => f.name)])));
+        await new Promise((r) => setTimeout(r, 600));
+        finish(reference, "Preview mode: nothing was sent.");
+      }
+    } catch (err) {
+      console.error(err);
+      errBox.style.display = "";
+      errBox.innerHTML = `<strong>We could not send your application.</strong> Please check your connection and try again. If the problem continues, email your documents to <a href="mailto:${CONFIG.adminEmail}">${CONFIG.adminEmail}</a>.`;
+      btn.disabled = false; btn.textContent = "Submit application";
+    }
+  }
+  function finish(reference, message) {
+    $("#doneRef").textContent = reference;
+    $("#doneRefPay").textContent = $("#payRef").textContent;
+    $("#doneEmailNote").textContent = message || `A confirmation will be sent to ${val("applicant.email")}.`;
+    $$(".panel").forEach((p) => p.classList.toggle("active", p.dataset.step === "done"));
+    $("#nav").style.display = "none"; $("#progress").style.display = "none";
+    try { localStorage.removeItem(CONFIG.storageKey); } catch (_) {}
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    postHeight();
+  }
+  $("#printBtn").addEventListener("click", () => { $$(".panel").forEach((p) => p.classList.toggle("active", p.dataset.step === "review" || p.dataset.step === "done")); window.print(); $$(".panel").forEach((p) => p.classList.toggle("active", p.dataset.step === "done")); });
+  $("#newAppBtn").addEventListener("click", () => location.reload());
+
+  /* ---------- Draft persistence (text only; files cannot be stored) ---------- */
+  let saveTimer;
+  function saveDraftSoon() { clearTimeout(saveTimer); saveTimer = setTimeout(saveDraft, 500); }
+  function saveDraft() {
+    try {
+      const d = collect();
+      delete d["signature.confirm"]; delete d["signature.outstandingAck"];
+      d.pets = d.pets.map((p) => { const { files: _f, ...rest } = p; return rest; });
+      localStorage.setItem(CONFIG.storageKey, JSON.stringify({ savedAt: Date.now(), current: activeSteps()[current]?.id, furthest, data: d }));
+      $("#savedNote").textContent = "Saved on this device " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } catch (_) { /* storage unavailable (private mode etc.) */ }
+  }
+  function loadDraft() {
+    let saved; try { saved = JSON.parse(localStorage.getItem(CONFIG.storageKey) || "null"); } catch (_) { return false; }
+    if (!saved || !saved.data) return false;
+    const d = saved.data;
+    Object.entries(d).forEach(([k, v]) => { const el = form.elements[k]; if (!el || Array.isArray(v) || typeof v === "object") return; if (el instanceof RadioNodeList) el.value = v; else if (el.type === "checkbox") el.checked = !!v; else el.value = v; });
+    (d.children || []).forEach((r) => addRow("child", r)); (d.vehicles || []).forEach((r) => addRow("vehicle", r)); (d.secondaryVehicles || []).forEach((r) => addRow("secondary", r)); (d.references || []).forEach((r) => addRow("ref", r)); (d.pets || []).forEach((r) => addRow("pet", r));
+    $("#petSection").style.display = ctx().pets ? "" : "none";
+    $("#criminalDisclosureField").style.display = ctx().criminalDisclosure ? "" : "none";
+    $("#motivationCount").textContent = val("motivation").length;
+    furthest = Math.min(saved.furthest || 0, activeSteps().length - 1);
+    const idx = activeSteps().findIndex((s) => s.id === saved.current);
+    showStep(idx >= 0 ? idx : 0);
+    $("#savedNote").textContent = "Draft restored from " + new Date(saved.savedAt).toLocaleDateString();
+    return true;
+  }
+  $("#resetBtn").addEventListener("click", () => {
+    if (!confirm("Clear all saved answers and start again?")) return;
+    try { localStorage.removeItem(CONFIG.storageKey); } catch (_) {}
+    location.reload();
+  });
+
+  /* ---------- Embedding support (iframe auto-height) ---------- */
+  function postHeight() { if (window.parent === window) return; requestAnimationFrame(() => window.parent.postMessage({ type: "pinksterpark-application:height", height: document.documentElement.scrollHeight }, "*")); }
+  new ResizeObserver(postHeight).observe(document.body);
+
+  /* ---------- Init ---------- */
+  if (/[?&]embed=1/.test(location.search) || window.parent !== window) document.documentElement.classList.add("embedded");
+  $$("[data-max-mb]").forEach((s) => (s.textContent = CONFIG.maxFileMB));
+  $$("[data-link]").forEach((a) => { if (CONFIG.links[a.dataset.link]) a.href = CONFIG.links[a.dataset.link]; });
+  if (!CONFIG.endpoint) $("#demoBanner").style.display = "";
+  $("#sig_date").value = todayISO();
+  if (!loadDraft()) showStep(0);
+})();
+</script>
+</body>
+</html>
