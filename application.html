@@ -1173,7 +1173,8 @@
     $("#progressBar").style.width = Math.round(((current + 1) / steps.length) * 100) + "%";
     $("#progressLabel").textContent = `Step ${current + 1} of ${steps.length} · ${steps[current].title}`;
     $("#stepPills").innerHTML = steps.map((s, k) => `<button type="button" data-go="${k}" class="${k === current ? "current" : k <= furthest ? "done" : ""}" ${k > furthest ? "disabled" : ""}><span class="n">${k + 1}</span>${esc(s.title)}</button>`).join("");
-    window.scrollTo({ top: $("#progress").offsetTop - 12, behavior: "smooth" });
+    if (window.parent !== window) window.parent.postMessage({ type: "pinksterpark-application:scroll", top: $("#progress").offsetTop - 12 }, "*");
+    else window.scrollTo({ top: $("#progress").offsetTop - 12, behavior: "smooth" });
     postHeight();
   }
   $("#stepPills").addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b && !b.disabled) showStep(+b.dataset.go); });
