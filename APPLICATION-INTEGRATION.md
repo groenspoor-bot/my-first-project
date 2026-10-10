@@ -69,14 +69,25 @@ Either option keeps the page as one file, so later updates are a single-file rep
   ```html
   <iframe id="pp-apply" src="https://groenspoor-bot.github.io/my-first-project/application.html?embed=1" style="width:100%;border:0;min-height:900px" title="Pinksterpark application"></iframe>
   <script>
-    addEventListener("message", e => {
-      if (e.data && e.data.type === "pinksterpark-application:height")
-        document.getElementById("pp-apply").style.height = e.data.height + 20 + "px";
-    });
+    (function () {
+      var f = document.getElementById("pp-apply");
+      addEventListener("message", function (e) {
+        if (e.origin !== "https://groenspoor-bot.github.io" || !e.data) return;
+        if (e.data.type === "pinksterpark-application:height") f.style.height = (e.data.height + 24) + "px";
+        if (e.data.type === "pinksterpark-application:scroll") {
+          var y = f.getBoundingClientRect().top + pageYOffset + (e.data.top || 0) - 100;
+          scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+        }
+      });
+    })();
   </script>
   ```
 
-  The page posts its height to the parent, so the iframe grows with each step and never shows an inner scrollbar.
+  The page posts its height to the parent, so the iframe grows with each step and never shows an inner
+  scrollbar, and asks the parent to scroll to the top of the form when the step changes.
+
+  Live set-up (October 2026): WordPress page id 18835 (`/application/`, template "template/template-homepage.php",
+  one Custom HTML block with the snippet above) and Main Menu item id 18836 placed after Documents & Resources.
 
 - **Native page:** paste the contents of `<style>` and `<body>` into a full-width Houzez page template.
   The CSS is namespaced to the form's own classes and uses the same font as the theme.
