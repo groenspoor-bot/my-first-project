@@ -18,6 +18,7 @@
     --result-line: #cfdcf0;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   body {
     min-height: 100vh;
     font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
@@ -34,7 +35,7 @@
     box-shadow: 0 12px 34px rgba(30,37,48,0.08);
     margin-bottom: 24px;
   }
-  h1 { font-size: 1.9rem; margin-bottom: 10px; letter-spacing: -0.01em; }
+  h1 { font-size: clamp(1.5rem, 5.5vw, 1.9rem); margin-bottom: 10px; letter-spacing: -0.01em; }
   .intro p { line-height: 1.6; color: var(--muted); }
 
   .card {
@@ -166,18 +167,43 @@
   button.secondary:hover { background: #e1eaf8; }
   button.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-  .email-box {
-    margin-top: 16px;
-    display: none;
+  /* Mobile */
+  @media (max-width: 600px) {
+    body { padding: 16px 10px 60px; }
+    .intro { padding: 22px 18px; border-radius: 16px; }
+    .card { padding: 22px 18px 26px; border-radius: 16px; }
+    h1 { font-size: 1.4rem; }
+    .intro p { font-size: 0.92rem; }
+
+    .tabs {
+      flex-wrap: wrap;
+      gap: 6px;
+      border-radius: 16px;
+    }
+    .tab {
+      flex: 1 1 calc(50% - 6px);
+      font-size: 0.85rem;
+      padding: 12px 8px;
+      border-radius: 12px;
+    }
+
+    .panel h2 { font-size: 1.1rem; }
+    input[type="text"], input[type="number"], input[type="date"], input[type="email"], select {
+      font-size: 16px; /* prevents iOS auto-zoom on focus */
+      padding: 12px 12px;
+    }
+
+    .summary { padding: 16px 16px; }
+    .summary .headline dd { font-size: 1.25rem; }
+
+    .action-row { flex-direction: column; }
+    button.btn { width: 100%; text-align: center; }
   }
-  .email-box.open { display: block; }
-  .email-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .email-row input { flex: 1; min-width: 200px; }
 
   /* Print styles */
   @media print {
     body { background: #fff; padding: 0; }
-    .intro .print-hide, .tabs, .action-row, .email-box { display: none !important; }
+    .intro .print-hide, .tabs, .action-row { display: none !important; }
     .card { box-shadow: none; border: 1px solid #ccc; padding: 20px; margin-bottom: 16px; }
     .panel { display: block !important; }
     .panel + .panel { margin-top: 14px; }
@@ -214,6 +240,12 @@
         <label>Building m²</label>
         <input type="number" id="buildingSqm" min="0" step="0.01" placeholder="e.g. 180" />
         <p class="error-text">Please enter a building size greater than 0.</p>
+      </div>
+
+      <div class="field" data-field="levies">
+        <label>Current Levies m²</label>
+        <input type="number" id="leviesPerSqm" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 45.00" />
+        <p class="hint-text">Current levy rate in Rand per m² (R/m²). Optional — used to calculate the Estimated Levies Value.</p>
       </div>
 
       <div class="field" data-field="valuationDate">
@@ -275,15 +307,6 @@
 
     <div class="action-row print-hide">
       <button class="btn primary" id="printBtn" type="button" disabled>🖨️ Print Valuation</button>
-      <button class="btn secondary" id="emailBtn" type="button" disabled>✉️ Email Valuation</button>
-    </div>
-
-    <div class="email-box print-hide" id="emailBox">
-      <p class="hint-text" style="margin-bottom:10px;">This opens your own email app with the valuation pre-filled — nothing is sent automatically.</p>
-      <div class="email-row">
-        <input type="email" id="emailTo" placeholder="Recipient email address (optional)" />
-        <button class="btn primary" id="emailSendBtn" type="button">Open in Email App</button>
-      </div>
     </div>
   </div>
 
@@ -384,16 +407,13 @@
 
   const cessionNumberEl = document.getElementById("cessionNumber");
   const buildingSqmEl = document.getElementById("buildingSqm");
+  const leviesEl = document.getElementById("leviesPerSqm");
   const valuationDateEl = document.getElementById("valuationDate");
   const materialRateChip = document.getElementById("materialRateChip");
   const conditionDesc = document.getElementById("conditionDesc");
   const roofDesc = document.getElementById("roofDesc");
   const summaryBox = document.getElementById("summaryBox");
   const printBtn = document.getElementById("printBtn");
-  const emailBtn = document.getElementById("emailBtn");
-  const emailBox = document.getElementById("emailBox");
-  const emailTo = document.getElementById("emailTo");
-  const emailSendBtn = document.getElementById("emailSendBtn");
 
   let lastResult = null;
 
@@ -406,6 +426,7 @@
   function recalculate() {
     const cessionNumber = cessionNumberEl.value.trim();
     const sqm = parseFloat(buildingSqmEl.value);
+    const levies = parseFloat(leviesEl.value);
     const valuationDate = valuationDateEl.value;
     const material = MATERIALS.find(m => m.id === materialSelect.value);
     const condition = CONDITIONS.find(c => c.id === conditionSelect.value);
@@ -440,7 +461,9 @@
     }
 
     const validSqm = !isNaN(sqm) && sqm > 0;
+    const validLevies = !isNaN(levies) && levies >= 0;
     const ready = validSqm && material && condition && roof;
+    const leviesValue = (validSqm && validLevies) ? sqm * levies : null;
 
     let replacementValue = null;
     let currentValue = null;
@@ -454,12 +477,14 @@
       cessionNumber, sqm, valuationDate, material, condition, roof,
       rate: escalatedRate(material.base, valuationDate),
       replacementValue, currentValue,
+      levies: validLevies ? levies : null, leviesValue,
     } : null;
 
     // Summary
     const rows = [
       ["Cession Number", cessionNumber || "—"],
       ["Building m²", validSqm ? `${sqm.toLocaleString("en-US")} m²` : "—"],
+      ["Current Levies m²", validLevies ? `${fmtCurrency(levies)}/m²` : "—"],
       ["Date of Valuation", valuationDate || "—"],
       ["Construction Material", material ? material.label : "—"],
       ["Condition Assessment", condition ? `${condition.label} (${condition.pct}%)` : "—"],
@@ -467,15 +492,14 @@
     ];
     let html = rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join("");
     html += `<div class="subline"><dt>Estimated Replacement Value</dt><dd>${ready ? fmtCurrency(replacementValue) : "—"}</dd></div>`;
+    html += `<div class="subline"><dt>Estimated Levies Value</dt><dd>${leviesValue !== null ? fmtCurrency(leviesValue) : "—"}</dd></div>`;
     html += `<div class="headline"><dt>Estimated Current Value</dt><dd>${ready ? fmtCurrency(currentValue) : "—"}</dd></div>`;
     summaryBox.innerHTML = html;
 
     printBtn.disabled = !ready;
-    emailBtn.disabled = !ready;
-    if (!ready) emailBox.classList.remove("open");
   }
 
-  [cessionNumberEl, buildingSqmEl, valuationDateEl, materialSelect, conditionSelect, roofSelect].forEach(el => {
+  [cessionNumberEl, buildingSqmEl, leviesEl, valuationDateEl, materialSelect, conditionSelect, roofSelect].forEach(el => {
     el.addEventListener("input", recalculate);
     el.addEventListener("change", recalculate);
   });
@@ -483,33 +507,6 @@
   printBtn.addEventListener("click", () => {
     if (!lastResult) return;
     window.print();
-  });
-
-  emailBtn.addEventListener("click", () => {
-    emailBox.classList.toggle("open");
-  });
-
-  emailSendBtn.addEventListener("click", () => {
-    if (!lastResult) return;
-    const r = lastResult;
-    const subject = `Cession Valuation - ${r.cessionNumber || "Untitled"}`;
-    const bodyLines = [
-      "CESSION VALUATION",
-      "",
-      `Cession Number: ${r.cessionNumber || "—"}`,
-      `Building m²: ${r.sqm.toLocaleString("en-US")} m²`,
-      `Date of Valuation: ${r.valuationDate || "—"}`,
-      `Construction Material: ${r.material.label}`,
-      `Material Rate Used: ${fmtCurrency(r.rate)}/m²`,
-      `Condition Assessment: ${r.condition.label} (${r.condition.pct}%)`,
-      `Roof Covering: ${r.roof.label} (${r.roof.pct}%)`,
-      "",
-      `Estimated Replacement Value: ${fmtCurrency(r.replacementValue)}`,
-      `Estimated Current Value: ${fmtCurrency(r.currentValue)}`,
-    ];
-    const to = emailTo.value.trim();
-    const mailtoUrl = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
-    window.location.href = mailtoUrl;
   });
 
   // Default valuation date to today
