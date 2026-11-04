@@ -94,7 +94,7 @@
     transition: border-color 0.2s ease;
   }
   input:focus, select:focus { border-color: var(--accent); }
-  .value-line { font-size: 1.15rem; font-weight: 700; color: var(--accent-dark); padding: 4px 0 2px; }
+  .value-line { font-size: 1rem; font-weight: 700; color: var(--accent-dark); padding: 4px 0 2px; }
   .label-note { display: block; font-weight: 400; font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
   .hint-text { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
   .error-text { font-size: 0.82rem; color: var(--danger); margin-top: 5px; display: none; }
@@ -224,8 +224,8 @@
     <div class="tabs print-hide" role="tablist">
       <button class="tab active" data-tab="details" type="button">Details</button>
       <button class="tab" data-tab="material" type="button">Construction Material</button>
-      <button class="tab" data-tab="condition" type="button">Condition Assessment</button>
       <button class="tab" data-tab="roof" type="button">Roof Covering</button>
+      <button class="tab" data-tab="condition" type="button">Condition Assessment</button>
     </div>
 
     <!-- Details -->
@@ -247,7 +247,6 @@
       <div class="field" data-field="levies">
         <label>Current Levies m² <span class="label-note">(Levies will increase by 9% annually starting on 1 January 2028)</span></label>
         <div class="value-line" id="leviesCurrent">R 28.63 / m²</div>
-        <div class="rate-chip" id="leviesRateChip" style="display:none;"></div>
       </div>
 
       <div class="field" data-field="valuationDate">
@@ -272,21 +271,6 @@
       </div>
     </section>
 
-    <!-- Condition Assessment -->
-    <section class="panel" id="condition">
-      <h2>Condition Assessment</h2>
-      <p class="sub">Select the condition that best describes the building.</p>
-
-      <div class="field" data-field="condition">
-        <label>Condition Assessment</label>
-        <select id="conditionSelect">
-          <option value="">Select a condition…</option>
-        </select>
-        <p class="error-text">Please select a condition assessment.</p>
-        <div class="condition-desc" id="conditionDesc" style="display:none;"></div>
-      </div>
-    </section>
-
     <!-- Roof Covering -->
     <section class="panel" id="roof">
       <h2>Roof Covering</h2>
@@ -299,6 +283,21 @@
         </select>
         <p class="error-text">Please select a roof covering.</p>
         <div class="condition-desc" id="roofDesc" style="display:none;"></div>
+      </div>
+    </section>
+
+    <!-- Condition Assessment -->
+    <section class="panel" id="condition">
+      <h2>Condition Assessment</h2>
+      <p class="sub">Select the condition that best describes the building.</p>
+
+      <div class="field" data-field="condition">
+        <label>Condition Assessment</label>
+        <select id="conditionSelect">
+          <option value="">Select a condition…</option>
+        </select>
+        <p class="error-text">Please select a condition assessment.</p>
+        <div class="condition-desc" id="conditionDesc" style="display:none;"></div>
       </div>
     </section>
   </div>
@@ -425,7 +424,6 @@
 
   const cessionNumberEl = document.getElementById("cessionNumber");
   const buildingSqmEl = document.getElementById("buildingSqm");
-  const leviesRateChip = document.getElementById("leviesRateChip");
   const valuationDateEl = document.getElementById("valuationDate");
   const materialRateChip = document.getElementById("materialRateChip");
   const conditionDesc = document.getElementById("conditionDesc");
@@ -461,15 +459,6 @@
         : `Rate: ${fmtCurrency(rate)}/m² (base rate, no escalation applies before 1 Jan 2027)`;
     } else {
       materialRateChip.style.display = "none";
-    }
-
-    // Levies rate chip
-    const leviesYearLabel = valuationDate ? valuationDate.slice(0, 4) : "";
-    if (leviesYears > 0) {
-      leviesRateChip.style.display = "inline-block";
-      leviesRateChip.textContent = `Levies as from 1 January ${leviesYearLabel}: ${fmtCurrency(levies)}/m² (${fmtCurrency(LEVIES_BASE_RATE)} + 9% × ${leviesYears})`;
-    } else {
-      leviesRateChip.style.display = "none";
     }
 
     // Condition description
@@ -511,13 +500,11 @@
     const rows = [
       ["Cession Number", cessionNumber || "—"],
       ["Building m²", validSqm ? `${sqm.toLocaleString("en-US")} m²` : "—"],
-      ["Current Levies m²", leviesYears > 0
-        ? `${fmtCurrency(levies)}/m² as from 1 January ${leviesYearLabel} (${fmtCurrency(LEVIES_BASE_RATE)} + 9% × ${leviesYears})`
-        : `${fmtCurrency(levies)}/m²`],
+      ["Current Levies m²", `${fmtCurrency(levies)}/m²`],
       ["Date of Valuation", valuationDate || "—"],
       ["Construction Material", material ? material.label : "—"],
-      ["Condition Assessment", condition ? `${condition.label} (${condition.pct}%)` : "—"],
       ["Roof Covering", roof ? `${roof.label} (${roof.pct}%)` : "—"],
+      ["Condition Assessment", condition ? `${condition.label} (${condition.pct}%)` : "—"],
     ];
     let html = rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join("");
     html += `<div class="subline"><dt>Estimated Replacement Value</dt><dd>${ready ? fmtCurrency(replacementValue) : "—"}</dd></div>`;
