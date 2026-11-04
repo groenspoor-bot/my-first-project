@@ -94,6 +94,9 @@
     transition: border-color 0.2s ease;
   }
   input:focus, select:focus { border-color: var(--accent); }
+  input[readonly] { background: var(--bg); color: var(--muted); cursor: default; font-weight: 600; }
+  input[readonly]:focus { border-color: var(--line); }
+  .label-note { display: block; font-weight: 400; font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
   .hint-text { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
   .error-text { font-size: 0.82rem; color: var(--danger); margin-top: 5px; display: none; }
   .field.invalid input, .field.invalid select { border-color: var(--danger); }
@@ -243,9 +246,9 @@
       </div>
 
       <div class="field" data-field="levies">
-        <label>Current Levies m²</label>
-        <input type="number" id="leviesPerSqm" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 45.00" />
-        <p class="hint-text">Current levy rate in Rand per m² (R/m²). Optional — used to calculate the Estimated Levies Value.</p>
+        <label>Current Levies m² <span class="label-note">(Levies will increase by 9% annually starting on 1 January 2028)</span></label>
+        <input type="text" id="leviesPerSqm" value="R 28.63 / m²" readonly aria-readonly="true" tabindex="-1" />
+        <div class="rate-chip" id="leviesRateChip" style="display:none;"></div>
       </div>
 
       <div class="field" data-field="valuationDate">
@@ -353,6 +356,11 @@
   const ESCALATION_BASE_YEAR = ESCALATION_START_YEAR - 1; // 2026
   const ESCALATION_RATE = 0.07;
 
+  const LEVIES_BASE_RATE = 28.63;                               // R per m², fixed
+  const LEVIES_ESCALATION_START_YEAR = 2028;
+  const LEVIES_ESCALATION_BASE_YEAR = LEVIES_ESCALATION_START_YEAR - 1; // 2027
+  const LEVIES_ESCALATION_RATE = 0.09;
+
   // Populate dropdowns
   const materialSelect = document.getElementById("materialSelect");
   MATERIALS.forEach(m => {
@@ -405,9 +413,20 @@
     return base * Math.pow(1 + ESCALATION_RATE, n);
   }
 
+  function leviesEscalationYears(valuationDateStr) {
+    if (!valuationDateStr) return 0;
+    const d = new Date(valuationDateStr + "T00:00:00");
+    if (isNaN(d)) return 0;
+    return Math.max(0, d.getFullYear() - LEVIES_ESCALATION_BASE_YEAR);
+  }
+
+  function escalatedLeviesRate(valuationDateStr) {
+    return LEVIES_BASE_RATE * Math.pow(1 + LEVIES_ESCALATION_RATE, leviesEscalationYears(valuationDateStr));
+  }
+
   const cessionNumberEl = document.getElementById("cessionNumber");
   const buildingSqmEl = document.getElementById("buildingSqm");
-  const leviesEl = document.getElementById("leviesPerSqm");
+  const leviesRateChip = document.getElementById("leviesRateChip");
   const valuationDateEl = document.getElementById("valuationDate");
   const materialRateChip = document.getElementById("materialRateChip");
   const conditionDesc = document.getElementById("conditionDesc");
@@ -426,8 +445,9 @@
   function recalculate() {
     const cessionNumber = cessionNumberEl.value.trim();
     const sqm = parseFloat(buildingSqmEl.value);
-    const levies = parseFloat(leviesEl.value);
     const valuationDate = valuationDateEl.value;
+    const levies = escalatedLeviesRate(valuationDate);
+    const leviesYears = leviesEscalationYears(valuationDate);
     const material = MATERIALS.find(m => m.id === materialSelect.value);
     const condition = CONDITIONS.find(c => c.id === conditionSelect.value);
     const roof = ROOFS.find(r => r.id === roofSelect.value);
@@ -443,6 +463,12 @@
     } else {
       materialRateChip.style.display = "none";
     }
+
+    // Levies rate chip
+    leviesRateChip.style.display = "inline-block";
+    leviesRateChip.textContent = leviesYears > 0
+      ? `Escalated levy rate for ${valuationDate}: ${fmtCurrency(levies)}/m² (base ${fmtCurrency(LEVIES_BASE_RATE)} + ${leviesYears}× 9%)`
+      : `Rate: ${fmtCurrency(levies)}/m² (base rate, no escalation applies before 1 Jan 2028)`;
 
     // Condition description
     if (condition) {
@@ -461,9 +487,8 @@
     }
 
     const validSqm = !isNaN(sqm) && sqm > 0;
-    const validLevies = !isNaN(levies) && levies >= 0;
     const ready = validSqm && material && condition && roof;
-    const leviesValue = (validSqm && validLevies) ? sqm * levies : null;
+    const leviesValue = validSqm ? sqm * levies : null;
 
     let replacementValue = null;
     let currentValue = null;
@@ -477,14 +502,14 @@
       cessionNumber, sqm, valuationDate, material, condition, roof,
       rate: escalatedRate(material.base, valuationDate),
       replacementValue, currentValue,
-      levies: validLevies ? levies : null, leviesValue,
+      levies, leviesYears, leviesValue,
     } : null;
 
     // Summary
     const rows = [
       ["Cession Number", cessionNumber || "—"],
       ["Building m²", validSqm ? `${sqm.toLocaleString("en-US")} m²` : "—"],
-      ["Current Levies m²", validLevies ? `${fmtCurrency(levies)}/m²` : "—"],
+      ["Current Levies m²", `${fmtCurrency(levies)}/m²` + (leviesYears > 0 ? ` (base ${fmtCurrency(LEVIES_BASE_RATE)} + ${leviesYears}× 9%)` : "")],
       ["Date of Valuation", valuationDate || "—"],
       ["Construction Material", material ? material.label : "—"],
       ["Condition Assessment", condition ? `${condition.label} (${condition.pct}%)` : "—"],
@@ -499,7 +524,7 @@
     printBtn.disabled = !ready;
   }
 
-  [cessionNumberEl, buildingSqmEl, leviesEl, valuationDateEl, materialSelect, conditionSelect, roofSelect].forEach(el => {
+  [cessionNumberEl, buildingSqmEl, valuationDateEl, materialSelect, conditionSelect, roofSelect].forEach(el => {
     el.addEventListener("input", recalculate);
     el.addEventListener("change", recalculate);
   });
