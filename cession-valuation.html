@@ -94,8 +94,7 @@
     transition: border-color 0.2s ease;
   }
   input:focus, select:focus { border-color: var(--accent); }
-  input[readonly] { background: var(--bg); color: var(--muted); cursor: default; font-weight: 600; }
-  input[readonly]:focus { border-color: var(--line); }
+  .value-line { font-size: 1.15rem; font-weight: 700; color: var(--accent-dark); padding: 4px 0 2px; }
   .label-note { display: block; font-weight: 400; font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
   .hint-text { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
   .error-text { font-size: 0.82rem; color: var(--danger); margin-top: 5px; display: none; }
@@ -247,7 +246,7 @@
 
       <div class="field" data-field="levies">
         <label>Current Levies m² <span class="label-note">(Levies will increase by 9% annually starting on 1 January 2028)</span></label>
-        <input type="text" id="leviesPerSqm" value="R 28.63 / m²" readonly aria-readonly="true" tabindex="-1" />
+        <div class="value-line" id="leviesCurrent">R 28.63 / m²</div>
         <div class="rate-chip" id="leviesRateChip" style="display:none;"></div>
       </div>
 
@@ -465,10 +464,13 @@
     }
 
     // Levies rate chip
-    leviesRateChip.style.display = "inline-block";
-    leviesRateChip.textContent = leviesYears > 0
-      ? `Escalated levy rate for ${valuationDate}: ${fmtCurrency(levies)}/m² (base ${fmtCurrency(LEVIES_BASE_RATE)} + ${leviesYears}× 9%)`
-      : `Rate: ${fmtCurrency(levies)}/m² (base rate, no escalation applies before 1 Jan 2028)`;
+    const leviesYearLabel = valuationDate ? valuationDate.slice(0, 4) : "";
+    if (leviesYears > 0) {
+      leviesRateChip.style.display = "inline-block";
+      leviesRateChip.textContent = `Levies as from 1 January ${leviesYearLabel}: ${fmtCurrency(levies)}/m² (${fmtCurrency(LEVIES_BASE_RATE)} + 9% × ${leviesYears})`;
+    } else {
+      leviesRateChip.style.display = "none";
+    }
 
     // Condition description
     if (condition) {
@@ -509,7 +511,9 @@
     const rows = [
       ["Cession Number", cessionNumber || "—"],
       ["Building m²", validSqm ? `${sqm.toLocaleString("en-US")} m²` : "—"],
-      ["Current Levies m²", `${fmtCurrency(levies)}/m²` + (leviesYears > 0 ? ` (base ${fmtCurrency(LEVIES_BASE_RATE)} + ${leviesYears}× 9%)` : "")],
+      ["Current Levies m²", leviesYears > 0
+        ? `${fmtCurrency(levies)}/m² as from 1 January ${leviesYearLabel} (${fmtCurrency(LEVIES_BASE_RATE)} + 9% × ${leviesYears})`
+        : `${fmtCurrency(levies)}/m²`],
       ["Date of Valuation", valuationDate || "—"],
       ["Construction Material", material ? material.label : "—"],
       ["Condition Assessment", condition ? `${condition.label} (${condition.pct}%)` : "—"],
